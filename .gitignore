@@ -1,0 +1,8 @@
+.tundra2.dag
+.tundra2.dag.json
+.tundra2.digestcache
+.tundra2.scancache
+.tundra2.state
+t2-output/
+Scripts/*.pyc
+External/
