@@ -37,6 +37,14 @@ Program {
 				{ Pattern = "[/\\]macosx[/\\]"; Config = "mac*-*" }
 			},
 		},
+		FGlob {
+			Dir = "Source/Core/Cuda/test",
+			Extensions = { ".c", ".cpp", ".cxx", ".h", ".inl" },
+			Filters = {
+				{ Pattern = "[/\\]windows[/\\]"; Config = { "win64-*" } },
+				{ Pattern = "[/\\]macosx[/\\]"; Config = "mac*-*" }
+			},
+		},
 		"Source/Tools/Testing/Framework.h",
 		"Source/Tools/Testing/Framework.cpp"
 	},

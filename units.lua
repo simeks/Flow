@@ -82,19 +82,26 @@ SharedLibrary {
 			"$(SITK_BUILD)/include/SimpleITK-0.9",
 			"$(PYTHON)/include",
 			"$(NUMPY)/include",
+			"$(CUDA_PATH)/include",
 		}, 
 		CPPDEFS = { "FLOW_CORE_EXPORTS" },
 		LIBPATH = {
 			"$(PYTHON)/libs",
 			{ "$(SITK_LIBS)/Release", "$(SITK_BUILD)/ITK-build/lib/Release"; Config = { "win64-*-release" } },
 			{ "$(SITK_LIBS)/Debug", "$(SITK_BUILD)/ITK-build/lib/Debug"; Config = { "win64-*-debug" } },
+			"$(CUDA_PATH)/lib/x64",
+		},
+		CUDACCBIN = "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/bin/x86_amd64",
+		CUDAOPTS = { "--use-local-env", "--cl-version 2013", "--machine 64", "--compile", "-cudart static", "-Xcompiler \"$(CXXOPTS)\"",
+			{ "-G", "-g"; Config = { "win64-*-debug" } },
+			"-Xcudafe \"--diag_suppress=field_without_dll_interface\"",
 		},
 	},
 
 	Sources = {
 		FGlob {
 			Dir = "Source/Core",
-			Extensions = { ".c", ".cpp", ".cxx", ".h", ".inl" },
+			Extensions = { ".c", ".cpp", ".cxx", ".h", ".inl", ".cu" },
 			Filters = {
 				{ Pattern = "[/\\]windows[/\\]"; Config = { "win64-*" } },
 				{ Pattern = "[/\\]macosx[/\\]"; Config = "mac*-*" },
@@ -112,6 +119,7 @@ SharedLibrary {
 			"SimpleITKIO-0.9.lib",
 			"SimpleITKCommon-0.9.lib",	
 			"SimpleITKExplicit-0.9.lib",
+			"cudart_static.lib"
 		},
 	},
 }

@@ -13,6 +13,7 @@ local win32_config = {
 		SITK_LIBS = "$(SITK_BUILD)/SimpleITK-build/lib",
 		PYTHON = "C:\\Anaconda2",
 		NUMPY = "$(PYTHON)/Lib/site-packages/numpy/core",
+		CUDA_PATH = native.getenv("CUDA_PATH", ""),
 		CPPDEFS = { "FLOW_PLATFORM_WINDOWS", "FLOW_PLATFORM_WIN64", "_UNICODE", "UNICODE" },
 		CXXOPTS = {
 			"/WX", "/W4", "/EHsc", "/D_CRT_SECURE_NO_WARNINGS", "/D_SCL_SECURE_NO_DEPRECATE",

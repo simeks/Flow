@@ -17,7 +17,12 @@
 #undef MB_RIGHT
 
 #define DEBUG_BREAK __debugbreak()
+
+#ifndef __NVCC__
 #define ANALYSIS_ASSUME(expr) __analysis_assume(expr)
+#else
+#define ANALYSIS_ASSUME(expr)
+#endif
 
 #define INLINE __forceinline
 #define OVERRIDE override
