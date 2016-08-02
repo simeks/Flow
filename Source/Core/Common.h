@@ -23,9 +23,9 @@
 #include "API.h"
 #include "Debug/Assert.h"
 #include "Platform/StringConv.h"
+#include "Util.h"
 #include "Memory/Memory.h"
 #include "Memory/MemoryPool.h"
-#include "Util.h"
 #include "NonCopyable.h"
 #include "Console/Console.h"
 

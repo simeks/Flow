@@ -33,7 +33,7 @@ namespace util_internal
     void array_move(T* dst, const T* src, size_t count, const std::true_type&)
     {
         // Object with a trival assignment operator
-        memory::Memmove(dst, src, sizeof(T)*count);
+        memmove(dst, src, sizeof(T)*count);
     }
 
 
@@ -146,7 +146,7 @@ void array_copy(T* dst, const T* src, size_t count)
 template<typename T>
 void array_construct(T* arr, size_t count)
 {
-    util_internal::ArrayConstruct<T>(arr, count, std::has_trivial_constructor<T>());
+    util_internal::array_construct<T>(arr, count, std::has_trivial_constructor<T>());
 }
 
 template<typename T>
