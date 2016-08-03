@@ -52,53 +52,68 @@ void Image::create(const std::vector<uint32_t>& size, int type, const uint8_t* d
 
     release();
 
-    _ndims = (int)size.size();
+    int ndims = (int)size.size();
+    Vec3i vsize;
     int i = 0;
     for (; i < size.size(); ++i)
-        _size[i] = size[i];
+        vsize[i] = size[i];
     for (; i < 3; ++i)
-        _size[i] = 1;
+        vsize[i] = 1;
 
-    _pixel_type = type;
-    size_t num_bytes = _size.x * _size.y * _size.z * pixel_size();
-    _data = std::make_shared<ImageData>(num_bytes);
-    _data_ptr = _data->data;
-    
-    size_t elem_size = image::pixel_size(type);
-    size_t total = elem_size;
-    for (int i = 0; i < _ndims; ++i)
+    if (_ndims != ndims || _size != vsize || _pixel_type != type || !_data)
     {
-        _step[i] = total;
-        total *= _size[i];
-    }
+        _ndims = ndims;
+        _size = vsize;
 
+        _pixel_type = type;
+        size_t num_bytes = _size.x * _size.y * _size.z * pixel_size();
+        _data = std::make_shared<ImageData>(num_bytes);
+        _data_ptr = _data->data;
+
+        size_t elem_size = image::pixel_size(type);
+        size_t total = elem_size;
+        for (int i = 0; i < _ndims; ++i)
+        {
+            _step[i] = total;
+            total *= _size[i];
+        }
+    }
     if (data)
-        memcpy(_data->data, data, num_bytes);
+    {
+        size_t num_bytes = _size.x * _size.y * _size.z * pixel_size();
+        memcpy(_data_ptr, data, num_bytes);
+    }
 }
 void Image::create(int ndims, const Vec3i& size, int type, const uint8_t* data)
 {
     assert(ndims <= 3);
     assert(type != image::PixelType_Unknown);
 
-    release();
-
-    _ndims = ndims;
-    _size = size;
-    _pixel_type = type;
-    size_t num_bytes = _size.x * _size.y * _size.z * pixel_size();
-    _data = std::make_shared<ImageData>(num_bytes);
-    _data_ptr = _data->data;
-    
-    size_t elem_size = image::pixel_size(type);
-    size_t total = elem_size;
-    for (int i = 0; i < ndims; ++i)
+    if (_ndims != ndims || _size != size || _pixel_type != type || !_data)
     {
-        _step[i] = total;
-        total *= _size[i];
+        release();
+
+        _ndims = ndims;
+        _size = size;
+        _pixel_type = type;
+        size_t num_bytes = _size.x * _size.y * _size.z * pixel_size();
+        _data = std::make_shared<ImageData>(num_bytes);
+        _data_ptr = _data->data;
+
+        size_t elem_size = image::pixel_size(type);
+        size_t total = elem_size;
+        for (int i = 0; i < ndims; ++i)
+        {
+            _step[i] = total;
+            total *= _size[i];
+        }
     }
 
     if (data)
+    {
+        size_t num_bytes = _size.x * _size.y * _size.z * pixel_size();
         memcpy(_data_ptr, data, num_bytes);
+    }
 }
 void Image::release()
 {
