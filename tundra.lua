@@ -31,7 +31,12 @@ local win32_config = {
 		GENERATE_PDB = {
 			{ "0"; Config = "*-vs2013-release" },
 			{ "1"; Config = { "*-vs2013-debug", "*-vs2013-production" } },
-		}
+		},
+		CUDACCBIN = "C:/Program Files (x86)/Microsoft Visual Studio 12.0/VC/bin/x86_amd64",
+		CUDAOPTS = { "--use-local-env", "--cl-version 2013", "--machine 64", "--compile", "-cudart static", "-Xcompiler \"$(CXXOPTS)\"",
+			{ "-G", "-g"; Config = { "win64-*-debug" } },
+			"-Xcudafe \"--diag_suppress=field_without_dll_interface\"",
+		},
 	},
 }
 
