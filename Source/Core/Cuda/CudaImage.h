@@ -8,6 +8,9 @@ class CORE_API CudaImage
 {
 public:
     CudaImage();
+    /// Allocates memory on the GPU and uploads data of the specified image.
+    CudaImage(const Image& img);
+    /// Allocates memory on the GPU for a image with the specified properties.
     CudaImage(int ndims, const Vec3i& size, int type);
     ~CudaImage();
 

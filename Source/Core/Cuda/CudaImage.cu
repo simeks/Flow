@@ -37,6 +37,10 @@ CudaImage::CudaImage() :
     _pixel_type(image::PixelType_Unknown)
 {
 }
+CudaImage::CudaImage(const Image& img)
+{
+    upload(img);
+}
 CudaImage::CudaImage(int ndims, const Vec3i& size, int type)
 {
     create(ndims, size, type);
