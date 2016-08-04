@@ -10,7 +10,7 @@ void cuda_check(T result, char const *const func, const char *const file, int co
     if (result)
     {
         FATAL_ERROR("CUDA error at %s:%d \"%s\" : %s \n",
-            file, line, static_cast<unsigned int>(result), func, cudaGetErrorString(result));
+            file, line, func, cudaGetErrorString(result));
     }
 }
 
