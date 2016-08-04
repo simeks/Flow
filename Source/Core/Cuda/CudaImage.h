@@ -3,6 +3,7 @@
 
 #include "Image/Vec3.h"
 
+class Image;
 class CORE_API CudaImage
 {
 public:
@@ -17,6 +18,12 @@ public:
     void create(int ndims, const Vec3i& size, int type);
     void release();
 
+    /// Uploads the data from host to device memory.
+    void upload(const Image& img);
+
+    /// Downloads the data from device to host memory.
+    void download(Image& img);
+
 private:
     struct CORE_API CudaData
     {
@@ -24,7 +31,7 @@ private:
         ~CudaData();
 
         uint8_t* data; 
-        size_t step;
+        size_t pitch;
     };
     typedef std::shared_ptr<CudaData> DataPtr;
 

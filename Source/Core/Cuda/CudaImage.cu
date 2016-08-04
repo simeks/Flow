@@ -9,11 +9,11 @@ CudaImage::CudaData::CudaData(int ndims, const Vec3i& size, size_t elem_size)
     if (ndims == 1)
     {
         CUDA_CHECK_ERRORS(cudaMalloc(&data, elem_size * size.x));
-        step = elem_size * size.x;
+        pitch = elem_size * size.x;
     }
     else if (ndims == 2)
     {
-        CUDA_CHECK_ERRORS(cudaMallocPitch(&data, &step, elem_size * size.x, size.y));
+        CUDA_CHECK_ERRORS(cudaMallocPitch(&data, &pitch, elem_size * size.x, size.y));
     }
     else
     {
@@ -22,7 +22,7 @@ CudaImage::CudaData::CudaData(int ndims, const Vec3i& size, size_t elem_size)
         CUDA_CHECK_ERRORS(cudaMalloc3D(&ptr, extent));
 
         data = (uint8_t*)ptr.ptr;
-        step = ptr.pitch;
+        pitch = ptr.pitch;
     }
 }
 CudaImage::CudaData::~CudaData()
@@ -51,6 +51,9 @@ void CudaImage::create(int ndims, const Vec3i& size, int type)
     assert(ndims <= 3);
     assert(type != image::PixelType_Unknown);
 
+    if (_ndims == ndims && _size == size && _pixel_type == type && _data)
+        return;
+
     release();
 
     _ndims = ndims;
@@ -65,7 +68,54 @@ void CudaImage::release()
     _pixel_type = image::PixelType_Unknown;
     _data.reset();
 }
+void CudaImage::upload(const Image& img)
+{
+    create(img.ndims(), img.size(), img.pixel_type());
 
+    size_t elem_size = image::pixel_size(_pixel_type);
+    if (_ndims == 1)
+    {
+        CUDA_CHECK_ERRORS(cudaMemcpy(_data->data, img.ptr(), elem_size * _size.x, cudaMemcpyHostToDevice));
+    }
+    else if (_ndims == 2)
+    {
+        CUDA_CHECK_ERRORS(cudaMemcpy2D(_data->data, _data->pitch, img.ptr(), img.step()[1], elem_size * _size.x, _size.y, cudaMemcpyHostToDevice));
+    }
+    else
+    {
+        cudaMemcpy3DParms parms = { 0 };
+        parms.dstPtr = make_cudaPitchedPtr(_data->data, _data->pitch, elem_size * _size.x, _size.y);
+        parms.srcPtr = make_cudaPitchedPtr((void*)img.ptr(), img.step()[1], elem_size * img.size().x, img.size().y);
+        parms.extent = make_cudaExtent(elem_size * _size.x, _size.y, _size.z);
+        parms.kind = cudaMemcpyHostToDevice;
+        
+        CUDA_CHECK_ERRORS(cudaMemcpy3D(&parms));
+    }
+}
+void CudaImage::download(Image& img)
+{
+    img.create(_ndims, _size, _pixel_type);
+
+    size_t elem_size = image::pixel_size(_pixel_type);
+    if (_ndims == 1)
+    {
+        CUDA_CHECK_ERRORS(cudaMemcpy(img.ptr(), _data->data, elem_size * _size.x, cudaMemcpyDeviceToHost));
+    }
+    else if (_ndims == 2)
+    {
+        CUDA_CHECK_ERRORS(cudaMemcpy2D(img.ptr(), img.step()[1], _data->data, _data->pitch, elem_size * _size.x, _size.y, cudaMemcpyDeviceToHost));
+    }
+    else
+    {
+        cudaMemcpy3DParms parms = { 0 };
+        parms.dstPtr = make_cudaPitchedPtr((void*)img.ptr(), img.step()[1], elem_size * img.size().x, img.size().y);
+        parms.srcPtr = make_cudaPitchedPtr(_data->data, _data->pitch, elem_size * _size.x, _size.y);
+        parms.extent = make_cudaExtent(elem_size * _size.x, _size.y, _size.z);
+        parms.kind = cudaMemcpyDeviceToHost;
+
+        CUDA_CHECK_ERRORS(cudaMemcpy3D(&parms));
+    }
+}
 CudaImage::CudaImage(const CudaImage& other) :
     _data(other._data),
     _ndims(other._ndims),

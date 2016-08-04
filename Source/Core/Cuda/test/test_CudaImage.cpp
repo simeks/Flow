@@ -19,3 +19,41 @@ TEST_CASE(CudaImage_transfer)
 
     ASSERT_EXPR(true);
 }
+
+template<typename T> bool test_upload_download(int ndims, const Vec3i& size)
+{
+    ImageTpl<T> img(ndims, size);
+
+    for (int z = 0; z < size.z; ++z)
+        for (int y = 0; y < size.y; ++y)
+            for (int x = 0; x < size.x; ++x)
+                img(x, y, z) = rand() % 255;
+
+    CudaImage cuda_img;
+    cuda_img.upload(img);
+
+    ImageTpl<T> img_2;
+    cuda_img.download(img_2);
+
+    for (int z = 0; z < size.z; ++z)
+        for (int y = 0; y < size.y; ++y)
+            for (int x = 0; x < size.x; ++x)
+                if (img_2(x, y, z) != img(x, y, z))
+                    return false;
+    return true;
+}
+
+TEST_CASE(CudaImage_upload_download)
+{
+    ASSERT_EXPR(test_upload_download<uint8_t>(1, Vec3i(500, 1, 1)));
+    ASSERT_EXPR(test_upload_download<uint8_t>(2, Vec3i(500, 500, 1)));
+    ASSERT_EXPR(test_upload_download<uint8_t>(3, Vec3i(500, 500, 500)));
+
+    ASSERT_EXPR(test_upload_download<uint16_t>(1, Vec3i(500, 1, 1)));
+    ASSERT_EXPR(test_upload_download<uint16_t>(2, Vec3i(500, 500, 1)));
+    ASSERT_EXPR(test_upload_download<uint16_t>(3, Vec3i(500, 500, 500)));
+
+    ASSERT_EXPR(test_upload_download<uint32_t>(1, Vec3i(500, 1, 1)));
+    ASSERT_EXPR(test_upload_download<uint32_t>(2, Vec3i(500, 500, 1)));
+    ASSERT_EXPR(test_upload_download<uint32_t>(3, Vec3i(500, 500, 500)));
+}
