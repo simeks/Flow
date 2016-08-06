@@ -178,7 +178,7 @@ bool QtFlowDiagramScene::load_from_file(const QString& file)
     for (auto node_obj : nodes.as_array())
     {
         QtBaseNode* node = nullptr;
-        if (node_obj["node_class"].as_string() == "TerminalNode")
+        if (node_obj["node_class"].as_string().compare(0, 12, "TerminalNode") == 0)
         {
             node = new QtTerminalNode(nullptr);
         }
