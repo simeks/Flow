@@ -280,34 +280,58 @@ void QtFlowDiagramView::build_node_menu()
     std::map<std::string, QMenu*> sub_menus;
     sub_menus[""] = _context_menu;
 
-    for (auto& node : FlowSystem::get().node_templates())
+    std::vector<FlowNode*> nodes = FlowSystem::get().node_templates();
+    std::sort(nodes.begin(), nodes.end(), [](FlowNode* x, FlowNode* y)
     {
-        std::vector<std::string> elems;
+        int c = strcmp(x->category(), y->category());
+        if (c < 0)
+            return true;
+        else if (c > 0)
+            return false;
 
-        std::stringstream ss(node->category());
-        std::string item;
-        while (std::getline(ss, item, '/')) 
+        return strcmp(x->title(), y->title()) < 0;
+    });
+
+    // Build menus
+    for (auto& node : nodes)
+    {
+        if (sub_menus.find(node->category()) == sub_menus.end())
         {
-            elems.push_back(item);
-        }
+            std::vector<std::string> elems;
 
+            std::stringstream ss(node->category());
+            std::string item;
+            while (std::getline(ss, item, '/'))
+            {
+                elems.push_back(item);
+            }
+
+
+            QMenu* target_menu = _context_menu;
+            std::string menu_str = "";
+            for (int i = 0; i < elems.size(); ++i)
+            {
+                if (menu_str != "")
+                    menu_str += "/";
+                menu_str += elems[i];
+                auto it = sub_menus.find(menu_str);
+                if (it == sub_menus.end())
+                {
+                    sub_menus[menu_str] = new QMenu(QString::fromStdString(elems[i]), target_menu);
+                    target_menu->addMenu(sub_menus[menu_str]);
+                }
+                target_menu = sub_menus[menu_str];
+            }
+        }
+    }
+
+    // Insert nodes
+    for (auto& node : nodes)
+    {
         QAction* node_action = new QAction(QString::fromStdString(node->title()), _context_menu);
         node_action->setData(QVariant::fromValue<FlowNode*>(node));
 
-        QMenu* target_menu = _context_menu;
-        std::string menu_str = "";
-        for (int i = 0; i < elems.size(); ++i)
-        {
-            menu_str += elems[i];
-            auto it = sub_menus.find(menu_str);
-            if (it == sub_menus.end())
-            {
-                sub_menus[menu_str] = new QMenu(QString::fromStdString(elems[i]), target_menu);
-                target_menu->addMenu(sub_menus[menu_str]);
-            }
-            target_menu = sub_menus[menu_str];
-        }
-
+        QMenu* target_menu = sub_menus[node->category()];
         target_menu->addAction(node_action);
 
     }

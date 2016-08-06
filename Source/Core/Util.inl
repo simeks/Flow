@@ -161,17 +161,6 @@ void destruct(T* arr)
     util_internal::destruct<T>(arr, std::has_trivial_destructor<T>());
 }
 
-//-------------------------------------------------------------------------------
-template<typename T>
-INLINE void swap(T& l, T& r)
-{
-    if (&l != &r)
-    {
-        T tmp = l;
-        l = r;
-        r = tmp;
-    }
-}
 
 template<typename T>
 INLINE const T& min(const T& a, const T& b)

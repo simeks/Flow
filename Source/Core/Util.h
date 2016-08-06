@@ -6,8 +6,6 @@
 /// @file Util.h
 /// @brief Common utilities
 
-/// Swaps two types
-template<typename T> void swap(T& l, T& r);
 /// Returns the smallest of two values
 template<typename T> const T& min(const T& a, const T& b);
 /// Returns the biggest of two values
