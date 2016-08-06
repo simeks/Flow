@@ -114,7 +114,7 @@ SharedLibrary {
 			"SimpleITKIO-0.9.lib",
 			"SimpleITKCommon-0.9.lib",	
 			"SimpleITKExplicit-0.9.lib",
-			"cudart_static.lib"
+			"cudart.lib"
 		},
 	},
 }
@@ -246,18 +246,26 @@ SharedLibrary {
 			"Source/Plugins/Registration",
 			"Source",
 			"External/gco-v3.0/",
+			"$(CUDA_PATH)/include",
+		},
+		LIBPATH = {
+			"$(CUDA_PATH)/lib/x64",
 		},
 	},
 
 	Sources = {
 		FGlob {
 			Dir = "Source/Plugins/Registration",
-			Extensions = { ".c", ".cpp", ".h", ".inl" },
+			Extensions = { ".c", ".cpp", ".h", ".inl", ".cu" },
 			Filters = {
 				{ Pattern = "[/\\]windows[/\\]"; Config = { "win64-*" } },
 				{ Pattern = "[/\\]macosx[/\\]"; Config = "mac*-*" },
 			},
 		},
+	},
+	
+	Libs = { 
+		"cudart.lib"
 	},
 	Depends = { "Core" },
 }
