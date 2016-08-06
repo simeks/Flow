@@ -1,4 +1,5 @@
 #include <Core/Common.h>
+#include <Core/Cuda/Cuda.h>
 #include <Core/Cuda/CudaImage.h>
 #include <Core/Image/Image.h>
 
@@ -27,7 +28,7 @@ template<typename T> bool test_upload_download(int ndims, const Vec3i& size)
     for (int z = 0; z < size.z; ++z)
         for (int y = 0; y < size.y; ++y)
             for (int x = 0; x < size.x; ++x)
-                img(x, y, z) = rand() % 255;
+                img(x, y, z) = rand() % std::numeric_limits<T>::max();
 
     CudaImage cuda_img;
     cuda_img.upload(img);

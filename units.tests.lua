@@ -11,6 +11,7 @@ Program {
 			"$(SITK_BUILD)/include/SimpleITK-0.9",
 			"$(PYTHON)/include",
 			"$(NUMPY)/include",
+			"$(CUDA_PATH)/include",
 		}, 
 		CPPDEFS = { "FLOW_CORE_EXPORTS" },
 		LIBPATH = {
