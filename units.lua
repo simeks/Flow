@@ -300,6 +300,30 @@ SharedLibrary {
 	Depends = { "Core" },
 }
 
+SharedLibrary {
+	Name = "Image",
+	Target = "$(OBJECTDIR)/Plugins/Plugin_Image.dll",
+
+	Env = {
+		CPPPATH = { 
+			"Source/Plugins/Image",
+			"Source",
+		},
+		CXXOPTS = { "/openmp" }
+	},
+	
+	Sources = {
+		FGlob {
+			Dir = "Source/Plugins/Image",
+			Extensions = { ".c", ".cpp", ".h", ".inl" },
+			Filters = {
+				{ Pattern = "[/\\]windows[/\\]"; Config = { "win64-*" } },
+				{ Pattern = "[/\\]macosx[/\\]"; Config = "mac*-*" },
+			},
+		},
+	},
+	Depends = { "Core" },
+}
 
 
 Default "FlowLab"
