@@ -43,6 +43,11 @@ namespace
             int e = (int)sizeof(float) * 8;
             return cudaCreateChannelDesc(e, e, e, e, cudaChannelFormatKindFloat);
         }
+        case image::PixelType_Vec4d:
+        {
+            int e = (int)sizeof(double) * 8;
+            return cudaCreateChannelDesc(e, e, e, e, cudaChannelFormatKindFloat);
+        }
         }
         return cudaCreateChannelDesc(0, 0, 0, 0, cudaChannelFormatKindNone);
     }

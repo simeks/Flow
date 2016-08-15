@@ -50,6 +50,10 @@ static int string_to_pixel_type(const char* str)
     {
         pixel_t = image::PixelType_Vec4f;
     }
+    else if (strcmp(str, "vec4d") == 0)
+    {
+        pixel_t = image::PixelType_Vec4d;
+    }
     
     return pixel_t;
 }
@@ -275,6 +279,9 @@ static PyObject* py_FlowImage_pixel_type_fn(PyObject* self)
             break;
         case image::PixelType_Vec4f:
             str = PyString_FromString("vec4f");
+            break;
+        case image::PixelType_Vec4d:
+            str = PyString_FromString("vec4d");
             break;
         default:
             str = PyString_FromString("unknown");

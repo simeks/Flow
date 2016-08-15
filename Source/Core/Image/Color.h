@@ -30,6 +30,23 @@ struct Colorf
     Colorf operator/=(double d);
 };
 
+struct Colord
+{
+    double r, g, b, a;
+
+    Colord();
+    explicit Colord(double s);
+    explicit Colord(double r, double g, double b, double a);
+
+    Colord operator+(const Colord& v) const;
+    Colord operator-(const Colord& v) const;
+    Colord operator*(double d) const;
+    Colord operator/(double d) const;
+
+    Colord operator+=(const Colord& v);
+    Colord operator*=(double d);
+    Colord operator/=(double d);
+};
 #include "Color.inl"
 
 #endif // __CORE_IMAGE_COLOR_H__

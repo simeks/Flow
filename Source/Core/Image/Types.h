@@ -18,7 +18,8 @@ namespace image
         PixelType_Vec3f,
         PixelType_Vec3d,
         PixelType_Vec4u8,
-        PixelType_Vec4f
+        PixelType_Vec4f,
+        PixelType_Vec4d
     };
     
     size_t pixel_size(int type);
@@ -52,6 +53,7 @@ namespace image
     PIXEL_TYPE_TRAIT(Vec3d, image::PixelType_Vec3d);
     PIXEL_TYPE_TRAIT(RGBA32, image::PixelType_Vec4u8);
     PIXEL_TYPE_TRAIT(Colorf, image::PixelType_Vec4f);
+    PIXEL_TYPE_TRAIT(Colord, image::PixelType_Vec4d);
 
 }
 

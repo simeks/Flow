@@ -150,6 +150,7 @@ typedef ImageTpl<Vec3f> ImageVec3f;
 typedef ImageTpl<Vec3d> ImageVec3d;
 typedef ImageTpl<RGBA32> ImageRGBA32;
 typedef ImageTpl<Colorf> ImageColorf;
+typedef ImageTpl<Colord> ImageColord;
 
 namespace image
 {

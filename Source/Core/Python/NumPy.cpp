@@ -55,7 +55,9 @@ PyObject* numpy::create_array(FlowImage* img)
 
         ret = (PyObject*)obj;
     }
-    else if (img->pixel_type() == image::PixelType_Vec4u8 || img->pixel_type() == image::PixelType_Vec4f)
+    else if (img->pixel_type() == image::PixelType_Vec4u8 ||
+        img->pixel_type() == image::PixelType_Vec4f ||
+        img->pixel_type() == image::PixelType_Vec4d)
     {
         int np_type = NPY_UINT8;
 
@@ -148,7 +150,9 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
         Image img_data(size, type_hint, (const uint8_t*)PyArray_DATA(arr_object));
         img->set_image(img_data);
     }
-    else if (type_hint == image::PixelType_Vec4u8 || type_hint == image::PixelType_Vec4f)
+    else if (type_hint == image::PixelType_Vec4u8 ||
+        type_hint == image::PixelType_Vec4f ||
+        type_hint == image::PixelType_Vec4d)
     {
         int ndims = PyArray_NDIM(arr_object);
         if (ndims > 4)

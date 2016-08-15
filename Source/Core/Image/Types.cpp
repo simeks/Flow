@@ -24,7 +24,9 @@ size_t image::pixel_size(int type)
     case PixelType_Vec4u8:
         return sizeof(uint8_t)*4;
     case PixelType_Vec4f:
-        return sizeof(float)*4;
+        return sizeof(float) * 4;
+    case PixelType_Vec4d:
+        return sizeof(double) * 4;
     }
     return 0;
 }

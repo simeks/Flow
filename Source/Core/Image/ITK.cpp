@@ -61,34 +61,40 @@ Image image::load_image(const std::string& file)
             if (img.GetNumberOfComponentsPerPixel() == 3)
             {
                 ret.create(img.GetSize(), image::PixelType_Vec3d, (uint8_t*)img.GetBufferAsDouble());
-                break;
             }
+            else if (img.GetNumberOfComponentsPerPixel() == 4)
+            {
+                ret.create(img.GetSize(), image::PixelType_Vec4d, (uint8_t*)img.GetBufferAsDouble());
+            }
+            break;
         }
         case sitk::sitkVectorFloat32:
         {
             if (img.GetNumberOfComponentsPerPixel() == 3)
             {
                 ret.create(img.GetSize(), image::PixelType_Vec3f, (uint8_t*)img.GetBufferAsFloat());
-                break;
             }
             else if (img.GetNumberOfComponentsPerPixel() == 4)
             {
                 ret.create(img.GetSize(), image::PixelType_Vec4f, (uint8_t*)img.GetBufferAsFloat());
-                break;
             }
+            break;
         }
         case sitk::sitkVectorUInt8:
         {
             if (img.GetNumberOfComponentsPerPixel() == 4)
             {
                 ret.create(img.GetSize(), image::PixelType_Vec4u8, (uint8_t*)img.GetBufferAsUInt8());
-                break;
             }
+            break;
         }
-        default:
-            console::error("Unsupported image format : PixelId = %d, Component count = %d", img.GetPixelID(), img.GetNumberOfComponentsPerPixel());
+        }
+
+        if (!ret.valid())
+        {
+            console::error("Unsupported image format : PixelId = %d, Component count = %d\n", img.GetPixelID(), img.GetNumberOfComponentsPerPixel());
             return Image();
-        };
+        }
 
         Vec3d img_origin(0, 0, 0);
         vector_to_vec3i(img_origin, img.GetOrigin());
