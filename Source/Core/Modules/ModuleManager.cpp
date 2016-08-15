@@ -69,17 +69,17 @@ ModuleInterface* ModuleManager::load_module(const std::string& name)
                 }
                 else
                 {
-                    console::error("Failed to load module '%s': 'create_module' returned null.", name.c_str());
+                    console::error("Failed to load module '%s': 'create_module' returned null.\n", name.c_str());
                 }
             }
             else
             {
-                console::error("Failed to load module '%s': Function 'create_module' not found.", name.c_str());
+                console::error("Failed to load module '%s': Function 'create_module' not found.\n", name.c_str());
             }
         }
         else
         {
-            console::error("Failed to load module '%s'.", name.c_str());
+            console::error("Failed to load module '%s'.\n", name.c_str());
         }
     }
     else

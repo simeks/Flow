@@ -10,6 +10,7 @@ Guid guid::create_guid()
     Guid id;
     HRESULT hr = CoCreateGuid((GUID*)&id);
     assert(hr == S_OK);
+    hr;
 
     return id;
 }

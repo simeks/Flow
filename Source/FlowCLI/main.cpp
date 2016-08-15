@@ -232,9 +232,9 @@ void CommandLineApp::set_env_vars(FlowContext& context)
 }
 
 #ifndef DEBUG
-void output_callback(void*, uint32_t , const TCHAR* msg)
+void output_callback(void*, uint32_t , const char* msg)
 {
-    wprintf(msg);
+    printf(msg);
 }
 #endif
 
