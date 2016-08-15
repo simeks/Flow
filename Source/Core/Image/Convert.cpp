@@ -99,7 +99,7 @@ Image image::convert_image(const Image& src, int pixel_type, double scale, doubl
             convert_image_scale_tpl<uint8_t, float>(src.ptr<uint8_t>(), result.ptr<float>(), src.step(), result.step(), result.size(), 4, scale, shift);
         else
             convert_image_tpl<uint8_t, float>(src.ptr<uint8_t>(), result.ptr<float>(), src.step(), result.step(), result.size(), 4);
-   }
+    }
     else if (src.pixel_type() == image::PixelType_Vec4f && pixel_type == image::PixelType_Vec4u8)
     {
         result = Image(src.ndims(), src.size(), pixel_type);
@@ -107,6 +107,22 @@ Image image::convert_image(const Image& src, int pixel_type, double scale, doubl
             convert_image_scale_tpl<float, uint8_t>(src.ptr<float>(), result.ptr<uint8_t>(), src.step(), result.step(), result.size(), 4, scale, shift);
         else
             convert_image_tpl<float, uint8_t>(src.ptr<float>(), result.ptr<uint8_t>(), src.step(), result.step(), result.size(), 4);
+    }
+    if (src.pixel_type() == image::PixelType_Vec4u8 && pixel_type == image::PixelType_Vec4d)
+    {
+        result = Image(src.ndims(), src.size(), pixel_type);
+        if (do_scale)
+            convert_image_scale_tpl<uint8_t, double>(src.ptr<uint8_t>(), result.ptr<double>(), src.step(), result.step(), result.size(), 4, scale, shift);
+        else
+            convert_image_tpl<uint8_t, double>(src.ptr<uint8_t>(), result.ptr<double>(), src.step(), result.step(), result.size(), 4);
+    }
+    else if (src.pixel_type() == image::PixelType_Vec4d && pixel_type == image::PixelType_Vec4u8)
+    {
+        result = Image(src.ndims(), src.size(), pixel_type);
+        if (do_scale)
+            convert_image_scale_tpl<double, uint8_t>(src.ptr<double>(), result.ptr<uint8_t>(), src.step(), result.step(), result.size(), 4, scale, shift);
+        else
+            convert_image_tpl<double, uint8_t>(src.ptr<double>(), result.ptr<uint8_t>(), src.step(), result.step(), result.size(), 4);
     }
     else if (src.pixel_type() == image::PixelType_Float32 && pixel_type == image::PixelType_Float64)
     {

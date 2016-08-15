@@ -1,6 +1,8 @@
 #include "Common.h"
+#include "Platform/FilePath.h"
 
 #include "Flow/FlowImage.h"
+#include "Image/Convert.h"
 #include "ITK.h"
 
 #include <fstream>
@@ -118,6 +120,9 @@ bool image::save_image(const std::string& file, const Image& image)
 {
     try
     {
+        FilePath path(file);
+        bool is_png = path.extension() == "png";
+
         sitk::Image img;
         uint32_t ndims = image.ndims();
 
@@ -131,58 +136,103 @@ bool image::save_image(const std::string& file, const Image& image)
             size_in_bytes *= image.size()[i];
         }
 
-        uint8_t* dest = nullptr;
-        if (pixel_type == image::PixelType_UInt8)
+        if (is_png)
         {
-            img = sitk::Image(size, sitk::sitkUInt8);
-            dest = img.GetBufferAsUInt8();
-        }
-        else if (pixel_type == image::PixelType_UInt16)
-        {
-            img = sitk::Image(size, sitk::sitkUInt16);
-            dest = (uint8_t*)img.GetBufferAsUInt16();
-        }
-        else if (pixel_type == image::PixelType_UInt32)
-        {
-            img = sitk::Image(size, sitk::sitkUInt32);
-            dest = (uint8_t*)img.GetBufferAsUInt32();
-        }
-        else if (pixel_type == image::PixelType_Float32)
-        {
-            img = sitk::Image(size, sitk::sitkFloat32);
-            dest = (uint8_t*)img.GetBufferAsFloat();
-        }
-        else if (pixel_type == image::PixelType_Float64)
-        {
-            img = sitk::Image(size, sitk::sitkFloat64);
-            dest = (uint8_t*)img.GetBufferAsDouble();
-        }
-        else if (pixel_type == image::PixelType_Vec3f)
-        {
-            img = sitk::Image(size, sitk::sitkVectorFloat32, 3);
-            dest = (uint8_t*)img.GetBufferAsFloat();
-        }
-        else if (pixel_type == image::PixelType_Vec3d)
-        {
-            img = sitk::Image(size, sitk::sitkVectorFloat64, 3);
-            dest = (uint8_t*)img.GetBufferAsDouble();
-        }
-        else if (pixel_type == image::PixelType_Vec4u8)
-        {
-            img = sitk::Image(size, sitk::sitkVectorUInt8, 4);
-            dest = (uint8_t*)img.GetBufferAsUInt8();
-        }
-        else if (pixel_type == image::PixelType_Vec4f)
-        {
-            img = sitk::Image(size, sitk::sitkVectorFloat32, 4);
-            dest = (uint8_t*)img.GetBufferAsFloat();
+            // TODO: Support for higher bit depth than 8bits per channel?
+
+            Image src = image;
+            uint8_t* dest = nullptr;
+            if (pixel_type == image::PixelType_UInt8)
+            {
+                img = sitk::Image(size, sitk::sitkUInt8);
+                dest = img.GetBufferAsUInt8();
+            }
+            else if (pixel_type == image::PixelType_UInt16)
+            {
+                img = sitk::Image(size, sitk::sitkUInt16);
+                dest = (uint8_t*)img.GetBufferAsUInt16();
+            }
+            else if (pixel_type == image::PixelType_Vec4f)
+            {
+                src = image::convert_image(image, image::PixelType_Vec4u8, 255.0, 0.0);
+
+                img = sitk::Image(size, sitk::sitkVectorUInt8, 4);
+                dest = (uint8_t*)img.GetBufferAsUInt8();
+            }
+            else if (pixel_type == image::PixelType_Vec4d)
+            {
+                src = image::convert_image(image, image::PixelType_Vec4u8, 255.0, 0.0);
+
+                img = sitk::Image(size, sitk::sitkVectorUInt8, 4);
+                dest = (uint8_t*)img.GetBufferAsUInt8();
+            }
+            else
+            {
+                return false;
+            }
+
+            src.copy_to(dest);
         }
         else
         {
-            return false;
-        }
+            uint8_t* dest = nullptr;
+            if (pixel_type == image::PixelType_UInt8)
+            {
+                img = sitk::Image(size, sitk::sitkUInt8);
+                dest = img.GetBufferAsUInt8();
+            }
+            else if (pixel_type == image::PixelType_UInt16)
+            {
+                img = sitk::Image(size, sitk::sitkUInt16);
+                dest = (uint8_t*)img.GetBufferAsUInt16();
+            }
+            else if (pixel_type == image::PixelType_UInt32)
+            {
+                img = sitk::Image(size, sitk::sitkUInt32);
+                dest = (uint8_t*)img.GetBufferAsUInt32();
+            }
+            else if (pixel_type == image::PixelType_Float32)
+            {
+                img = sitk::Image(size, sitk::sitkFloat32);
+                dest = (uint8_t*)img.GetBufferAsFloat();
+            }
+            else if (pixel_type == image::PixelType_Float64)
+            {
+                img = sitk::Image(size, sitk::sitkFloat64);
+                dest = (uint8_t*)img.GetBufferAsDouble();
+            }
+            else if (pixel_type == image::PixelType_Vec3f)
+            {
+                img = sitk::Image(size, sitk::sitkVectorFloat32, 3);
+                dest = (uint8_t*)img.GetBufferAsFloat();
+            }
+            else if (pixel_type == image::PixelType_Vec3d)
+            {
+                img = sitk::Image(size, sitk::sitkVectorFloat64, 3);
+                dest = (uint8_t*)img.GetBufferAsDouble();
+            }
+            else if (pixel_type == image::PixelType_Vec4u8)
+            {
+                img = sitk::Image(size, sitk::sitkVectorUInt8, 4);
+                dest = (uint8_t*)img.GetBufferAsUInt8();
+            }
+            else if (pixel_type == image::PixelType_Vec4f)
+            {
+                img = sitk::Image(size, sitk::sitkVectorFloat32, 4);
+                dest = (uint8_t*)img.GetBufferAsFloat();
+            }
+            else if (pixel_type == image::PixelType_Vec4d)
+            {
+                img = sitk::Image(size, sitk::sitkVectorFloat64, 4);
+                dest = (uint8_t*)img.GetBufferAsDouble();
+            }
+            else
+            {
+                return false;
+            }
 
-        image.copy_to(dest);
+            image.copy_to(dest);
+        }
 
         std::vector<double> origin;
         std::vector<double> spacing;
