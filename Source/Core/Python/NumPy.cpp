@@ -44,7 +44,7 @@ PyObject* numpy::create_array(FlowImage* img)
         {
             dims[nd - 1 - i] = img->size()[i];
         }
-        dims[i] = 3;
+        dims[i] = 3; // 3 components in Vec3
 
         PyArrayObject* obj = (PyArrayObject*)PyArray_SimpleNew(nd+1, dims, np_type);
         uint8_t* dest = (uint8_t*)PyArray_DATA(obj);
@@ -59,7 +59,19 @@ PyObject* numpy::create_array(FlowImage* img)
         img->pixel_type() == image::PixelType_Vec4f ||
         img->pixel_type() == image::PixelType_Vec4d)
     {
-        int np_type = NPY_UINT8;
+        int np_type = -1;
+        switch (img->pixel_type())
+        {
+        case image::PixelType_Vec4u8:
+            np_type = NPY_UINT8;
+            break;
+        case image::PixelType_Vec4f:
+            np_type = NPY_FLOAT32;
+            break;
+        case image::PixelType_Vec4d:
+            np_type = NPY_FLOAT64;
+            break;
+        }
 
         int nd = img->ndims();
         npy_intp dims[4];
@@ -69,7 +81,7 @@ PyObject* numpy::create_array(FlowImage* img)
         {
             dims[nd - 1 - i] = img->size()[i];
         }
-        dims[i] = 4;
+        dims[i] = 4; // 4 components in Vec4
 
         PyArrayObject* obj = (PyArrayObject*)PyArray_SimpleNew(nd+1, dims, np_type);
         uint8_t* dest = (uint8_t*)PyArray_DATA(obj);
