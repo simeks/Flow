@@ -1,0 +1,226 @@
+{
+	"links": [
+		{
+			"in_node": "E8582BEA-79DA-44EF-BED6-7C7432833B55",
+			"in_pin": 0,
+			"out_node": "0E530E71-E6B2-49EE-95CA-E1EE9B263133",
+			"out_pin": 2
+		},
+		{
+			"in_node": "0E530E71-E6B2-49EE-95CA-E1EE9B263133",
+			"in_pin": 1,
+			"out_node": "15932276-3FE3-4A99-90AE-89C4C3708454",
+			"out_pin": 2
+		},
+		{
+			"in_node": "9EA6FE83-E52E-48ED-AFA0-88485365998A",
+			"in_pin": 0,
+			"out_node": "15932276-3FE3-4A99-90AE-89C4C3708454",
+			"out_pin": 2
+		},
+		{
+			"in_node": "E9D92224-DF78-48D9-B669-97737C72F9DE",
+			"in_pin": 1,
+			"out_node": "1909B320-FF10-4D1C-B019-9D4DD8A0446A",
+			"out_pin": 0
+		},
+		{
+			"in_node": "21E98B4B-36A2-4C26-94B6-46D0F66737FC",
+			"in_pin": 1,
+			"out_node": "1B9272E8-D001-461A-8888-97F1C75A1720",
+			"out_pin": 0
+		},
+		{
+			"in_node": "E8582BEA-79DA-44EF-BED6-7C7432833B55",
+			"in_pin": 2,
+			"out_node": "1B9272E8-D001-461A-8888-97F1C75A1720",
+			"out_pin": 0
+		},
+		{
+			"in_node": "15932276-3FE3-4A99-90AE-89C4C3708454",
+			"in_pin": 0,
+			"out_node": "21E98B4B-36A2-4C26-94B6-46D0F66737FC",
+			"out_pin": 2
+		},
+		{
+			"in_node": "63ABE131-A239-4DE3-82A2-401BAD017523",
+			"in_pin": 1,
+			"out_node": "783BD0BE-2288-4F72-BD2A-08F919EE01F7",
+			"out_pin": 0
+		},
+		{
+			"in_node": "21E98B4B-36A2-4C26-94B6-46D0F66737FC",
+			"in_pin": 0,
+			"out_node": "7B275E41-6022-4662-9B60-F780AA09ABCF",
+			"out_pin": 1
+		},
+		{
+			"in_node": "E8582BEA-79DA-44EF-BED6-7C7432833B55",
+			"in_pin": 1,
+			"out_node": "7B275E41-6022-4662-9B60-F780AA09ABCF",
+			"out_pin": 1
+		},
+		{
+			"in_node": "E9D92224-DF78-48D9-B669-97737C72F9DE",
+			"in_pin": 0,
+			"out_node": "9EA6FE83-E52E-48ED-AFA0-88485365998A",
+			"out_pin": 1
+		},
+		{
+			"in_node": "15932276-3FE3-4A99-90AE-89C4C3708454",
+			"in_pin": 1,
+			"out_node": "BEAD1C8A-9D70-4102-9F80-2214A2116503",
+			"out_pin": 0
+		},
+		{
+			"in_node": "E9D92224-DF78-48D9-B669-97737C72F9DE",
+			"in_pin": 2,
+			"out_node": "C92AC395-3E77-4D18-B2FC-9FC9AE5C92DE",
+			"out_pin": 0
+		},
+		{
+			"in_node": "7B275E41-6022-4662-9B60-F780AA09ABCF",
+			"in_pin": 0,
+			"out_node": "D8BDF603-1C47-4E61-8EBF-040DEAB3C025",
+			"out_pin": 0
+		},
+		{
+			"in_node": "63ABE131-A239-4DE3-82A2-401BAD017523",
+			"in_pin": 0,
+			"out_node": "E8582BEA-79DA-44EF-BED6-7C7432833B55",
+			"out_pin": 3
+		},
+		{
+			"in_node": "0E530E71-E6B2-49EE-95CA-E1EE9B263133",
+			"in_pin": 0,
+			"out_node": "E9D92224-DF78-48D9-B669-97737C72F9DE",
+			"out_pin": 3
+		}
+	],
+	"nodes": [
+		{
+			"id": "0E530E71-E6B2-49EE-95CA-E1EE9B263133",
+			"node_class": "ScriptNode:color_grid.ColorGrid2D",
+			"scene_pos": [
+				3120,
+				2398
+			]
+		},
+		{
+			"id": "15932276-3FE3-4A99-90AE-89C4C3708454",
+			"node_class": "ImageSliceToWorldNode",
+			"scene_pos": [
+				2617,
+				2405
+			]
+		},
+		{
+			"id": "1909B320-FF10-4D1C-B019-9D4DD8A0446A",
+			"node_class": "TerminalNode:Int",
+			"scene_pos": [
+				2643,
+				2213
+			],
+			"terminal_value": "2",
+			"terminal_var_name": "grid_thickness"
+		},
+		{
+			"id": "1B9272E8-D001-461A-8888-97F1C75A1720",
+			"node_class": "TerminalNode:Int",
+			"scene_pos": [
+				2273,
+				2490
+			],
+			"terminal_value": "126",
+			"terminal_var_name": "z"
+		},
+		{
+			"id": "21E98B4B-36A2-4C26-94B6-46D0F66737FC",
+			"node_class": "ScriptNode:color_grid.DeformationColor",
+			"scene_pos": [
+				2437,
+				2382
+			]
+		},
+		{
+			"id": "63ABE131-A239-4DE3-82A2-401BAD017523",
+			"node_class": "ImageSaveNode",
+			"scene_pos": [
+				3140,
+				2735
+			]
+		},
+		{
+			"id": "783BD0BE-2288-4F72-BD2A-08F919EE01F7",
+			"node_class": "TerminalNode:String",
+			"scene_pos": [
+				3026,
+				2844
+			],
+			"terminal_value": "colortest.vtk",
+			"terminal_var_name": "out"
+		},
+		{
+			"id": "7B275E41-6022-4662-9B60-F780AA09ABCF",
+			"node_class": "ImageLoadNode",
+			"scene_pos": [
+				2258,
+				2553
+			]
+		},
+		{
+			"id": "9EA6FE83-E52E-48ED-AFA0-88485365998A",
+			"node_class": "ImagePropertiesNode",
+			"scene_pos": [
+				2775,
+				2341
+			]
+		},
+		{
+			"id": "BEAD1C8A-9D70-4102-9F80-2214A2116503",
+			"node_class": "TerminalNode:Int",
+			"scene_pos": [
+				2483,
+				2277
+			],
+			"terminal_value": "0",
+			"terminal_var_name": "0"
+		},
+		{
+			"id": "C92AC395-3E77-4D18-B2FC-9FC9AE5C92DE",
+			"node_class": "TerminalNode:Int",
+			"scene_pos": [
+				2646,
+				2258
+			],
+			"terminal_value": "20",
+			"terminal_var_name": "grid_step"
+		},
+		{
+			"id": "D8BDF603-1C47-4E61-8EBF-040DEAB3C025",
+			"node_class": "TerminalNode:String",
+			"scene_pos": [
+				2171,
+				2573
+			],
+			"terminal_value": "G:\\Simon\\poem-test\\500158_500053\\final_deformation.rvf",
+			"terminal_var_name": "in"
+		},
+		{
+			"id": "E8582BEA-79DA-44EF-BED6-7C7432833B55",
+			"node_class": "TransformSliceNode",
+			"scene_pos": [
+				2853,
+				2680
+			]
+		},
+		{
+			"id": "E9D92224-DF78-48D9-B669-97737C72F9DE",
+			"node_class": "ScriptNode:color_grid.CreateGrid2D",
+			"scene_pos": [
+				2921,
+				2278
+			]
+		}
+	]
+}

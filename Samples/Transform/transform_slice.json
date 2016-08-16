@@ -1,0 +1,120 @@
+{
+	"links": [
+		{
+			"in_node": "5D5CA65D-0A29-4BF7-9521-E257A487DDF0",
+			"in_pin": 0,
+			"out_node": "15D47C40-A808-4698-9EEE-96F232B0C2F4",
+			"out_pin": 0
+		},
+		{
+			"in_node": "45274975-31C9-4A7E-8B0D-9EE0729BD870",
+			"in_pin": 1,
+			"out_node": "1C42AFB2-A131-4A3F-B3D6-2C2CFB3571C7",
+			"out_pin": 1
+		},
+		{
+			"in_node": "FB981138-45DD-4FD8-9089-C076A9163CFF",
+			"in_pin": 0,
+			"out_node": "45274975-31C9-4A7E-8B0D-9EE0729BD870",
+			"out_pin": 3
+		},
+		{
+			"in_node": "45274975-31C9-4A7E-8B0D-9EE0729BD870",
+			"in_pin": 2,
+			"out_node": "498F4AD0-A6CF-480E-B09D-697B1C5A6EB3",
+			"out_pin": 0
+		},
+		{
+			"in_node": "45274975-31C9-4A7E-8B0D-9EE0729BD870",
+			"in_pin": 0,
+			"out_node": "5D5CA65D-0A29-4BF7-9521-E257A487DDF0",
+			"out_pin": 1
+		},
+		{
+			"in_node": "1C42AFB2-A131-4A3F-B3D6-2C2CFB3571C7",
+			"in_pin": 0,
+			"out_node": "7D46772B-AF9A-456B-9AC4-919C91742DF6",
+			"out_pin": 0
+		},
+		{
+			"in_node": "FB981138-45DD-4FD8-9089-C076A9163CFF",
+			"in_pin": 1,
+			"out_node": "DD0D6529-77B1-4AA9-9674-95A7E7183C23",
+			"out_pin": 0
+		}
+	],
+	"nodes": [
+		{
+			"id": "15D47C40-A808-4698-9EEE-96F232B0C2F4",
+			"node_class": "TerminalNode:String",
+			"scene_pos": [
+				2039,
+				2323
+			],
+			"terminal_value": "",
+			"terminal_var_name": "src"
+		},
+		{
+			"id": "1C42AFB2-A131-4A3F-B3D6-2C2CFB3571C7",
+			"node_class": "ImageLoadNode",
+			"scene_pos": [
+				2190,
+				2454
+			]
+		},
+		{
+			"id": "45274975-31C9-4A7E-8B0D-9EE0729BD870",
+			"node_class": "TransformSliceNode",
+			"scene_pos": [
+				2505,
+				2466
+			]
+		},
+		{
+			"id": "498F4AD0-A6CF-480E-B09D-697B1C5A6EB3",
+			"node_class": "TerminalNode:Int",
+			"scene_pos": [
+				2064,
+				2641
+			],
+			"terminal_value": "0",
+			"terminal_var_name": "z"
+		},
+		{
+			"id": "5D5CA65D-0A29-4BF7-9521-E257A487DDF0",
+			"node_class": "ImageLoadNode",
+			"scene_pos": [
+				2205,
+				2291
+			]
+		},
+		{
+			"id": "7D46772B-AF9A-456B-9AC4-919C91742DF6",
+			"node_class": "TerminalNode:String",
+			"scene_pos": [
+				2011,
+				2436
+			],
+			"terminal_value": "",
+			"terminal_var_name": "def"
+		},
+		{
+			"id": "DD0D6529-77B1-4AA9-9674-95A7E7183C23",
+			"node_class": "TerminalNode:String",
+			"scene_pos": [
+				2351,
+				2755
+			],
+			"terminal_value": "",
+			"terminal_var_name": "out"
+		},
+		{
+			"id": "FB981138-45DD-4FD8-9089-C076A9163CFF",
+			"node_class": "ImageSaveNode",
+			"scene_pos": [
+				2679,
+				2597
+			]
+		}
+	]
+}
