@@ -6,6 +6,7 @@
 #include "FlowPrimitives.h"
 #include "FlowString.h"
 #include "FlowSystem.h"
+#include "FlowVector.h"
 #include "Image/Image.h"
 #include "Image/ITK.h"
 #include "ImageNodes.h"
@@ -102,8 +103,53 @@ public:
 IMPLEMENT_OBJECT(ImageSaveNode, "ImageSaveNode");
 
 
+class ImagePropertiesNode : public FlowNode
+{
+    DECLARE_OBJECT(ImagePropertiesNode, FlowNode);
+public:
+    ImagePropertiesNode()
+    {
+        add_pin("Image", FlowPin::In);
+        add_pin("Size", FlowPin::Out);
+        add_pin("Spacing", FlowPin::Out);
+        add_pin("Origin", FlowPin::Out);
+    }
+
+    void run(FlowContext& context) OVERRIDE
+    {
+        FlowImage* img = context.read_pin<FlowImage>("Image");
+        if (img)
+        {
+            if (pin("Size")->is_linked())
+            {
+                context.write_pin("Size", new FlowVec3i(img->size()));
+            }
+            if (pin("Spacing")->is_linked())
+            {
+                context.write_pin("Spacing", new FlowVec3d(img->spacing()));
+            }
+            if (pin("Origin")->is_linked())
+            {
+                context.write_pin("Origin", new FlowVec3d(img->origin()));
+            }
+        }
+    }
+        const char* title() const OVERRIDE
+    {
+        return "Properties";
+    }
+        const char* category() const OVERRIDE
+    {
+        return "Image";
+    }
+
+};
+IMPLEMENT_OBJECT(ImagePropertiesNode, "ImagePropertiesNode");
+
+
 void flow_image_nodes::install()
 {
     FlowSystem::get().install_template(new ImageLoadNode());
     FlowSystem::get().install_template(new ImageSaveNode());
+    FlowSystem::get().install_template(new ImagePropertiesNode());
 }
