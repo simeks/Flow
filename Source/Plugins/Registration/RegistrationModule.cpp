@@ -6,6 +6,7 @@
 #include "RegistrationModule.h"
 #include "RegistrationNode.h"
 #include "TransformNode.h"
+#include "TransformSliceNode.h"
 #include "GpuTransformNode.h"
 
 IMPLEMENT_MODULE(RegistrationModule);
@@ -21,6 +22,7 @@ void RegistrationModule::install()
 {
     FlowSystem::get().install_template(new RegistrationNode());
     FlowSystem::get().install_template(new TransformNode());
+    FlowSystem::get().install_template(new TransformSliceNode());
     FlowSystem::get().install_template(new GpuTransformNode());
 }
 void RegistrationModule::uninstall()

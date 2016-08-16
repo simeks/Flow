@@ -17,6 +17,7 @@ namespace transform
         result.set_spacing(source.spacing());
         result.set_origin(source.origin());
         Vec3i size = result.size();
+#pragma omp parallel for
         for (int z = 0; z < size.z; ++z)
         {
             for (int y = 0; y < size.y; ++y)
