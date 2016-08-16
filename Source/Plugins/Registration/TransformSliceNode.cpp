@@ -23,7 +23,7 @@ namespace transform
         {
             for (int x = 0; x < size.x; ++x)
             {
-                Vec3d d = deformation.linear_at(x / spacing.x, y / spacing.y, zindex);
+                Vec3d d = deformation.linear_at(x / spacing.x, y / spacing.y, zindex, image::Border_Replicate);
                 d.x = d.x * spacing.x;
                 d.y = d.y * spacing.y;
                 result(x, y, 0) = source.linear_at(x + d.x, y + d.y, 0);
