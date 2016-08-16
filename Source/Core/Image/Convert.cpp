@@ -156,6 +156,22 @@ Image image::convert_image(const Image& src, int pixel_type, double scale, doubl
         else
             convert_image_tpl<uint8_t, float>(src.ptr<uint8_t>(), result.ptr<float>(), src.step(), result.step(), result.size(), 1);
     }
+    else if (src.pixel_type() == image::PixelType_Float64 && pixel_type == image::PixelType_UInt8)
+    {
+        result = Image(src.ndims(), src.size(), pixel_type);
+        if (do_scale)
+            convert_image_scale_tpl<double, uint8_t>(src.ptr<double>(), result.ptr<uint8_t>(), src.step(), result.step(), result.size(), 1, scale, shift);
+        else
+            convert_image_tpl<double, uint8_t>(src.ptr<double>(), result.ptr<uint8_t>(), src.step(), result.step(), result.size(), 1);
+    }
+    else if (src.pixel_type() == image::PixelType_UInt8 && pixel_type == image::PixelType_Float64)
+    {
+        result = Image(src.ndims(), src.size(), pixel_type);
+        if (do_scale)
+            convert_image_scale_tpl<uint8_t, double>(src.ptr<uint8_t>(), result.ptr<double>(), src.step(), result.step(), result.size(), 1, scale, shift);
+        else
+            convert_image_tpl<uint8_t, double>(src.ptr<uint8_t>(), result.ptr<double>(), src.step(), result.step(), result.size(), 1);
+    }
     else
     {
         assert(false);
