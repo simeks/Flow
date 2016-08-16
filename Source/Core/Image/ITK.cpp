@@ -152,7 +152,7 @@ bool image::save_image(const std::string& file, const Image& image)
                 img = sitk::Image(size, sitk::sitkUInt16);
                 dest = (uint8_t*)img.GetBufferAsUInt16();
             }
-            if (pixel_type == image::PixelType_Float32 || 
+            else if (pixel_type == image::PixelType_Float32 || 
                 pixel_type == image::PixelType_Float64)
             {
                 src = image::convert_image(image, image::PixelType_UInt8, 255.0, 0.0);
