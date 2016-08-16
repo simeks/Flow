@@ -3,6 +3,8 @@
 #include "Flow/FlowContext.h"
 #include "Flow/FlowString.h"
 #include "Flow/FlowPrimitives.h"
+#include "Flow/FlowVector.h"
+#include "Image/Vec3.h"
 #include "PyFlowContext.h"
 #include "PyFlowObject.h"
 
@@ -93,9 +95,38 @@ PyFlowContext_write_pin(PyFlowContext* self, PyObject* args, PyObject *)
                 FlowFloat64* flt_obj = new FlowFloat64(PyFloat_AsDouble(obj));
                 self->owner->write_pin(pin_name, flt_obj);
             }
+            else if (PyTuple_Check(obj) && PyTuple_Size(obj) == 3)
+            {
+                bool flt = false;
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (PyFloat_Check(PyTuple_GetItem(obj, i)))
+                        flt = true;
+                }
+
+                if (flt)
+                {
+                    Vec3d vd;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vd[i] = PyFloat_AsDouble(PyTuple_GetItem(obj, i));
+                    }
+                    self->owner->write_pin(pin_name, new FlowVec3d(vd));
+                }
+                else
+                {
+                    Vec3i vi;
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        vi[i] = PyInt_AsLong(PyTuple_GetItem(obj, i));
+                    }
+                    self->owner->write_pin(pin_name, new FlowVec3i(vi));
+                }
+            }
             else
             {
                 FlowObject* fobj = py_flow_object::owner(obj);
+                assert(fobj);
                 if (fobj)
                     self->owner->write_pin(pin_name, fobj);
             }
