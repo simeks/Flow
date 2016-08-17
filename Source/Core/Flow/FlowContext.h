@@ -64,7 +64,7 @@ ObjectType* FlowContext::allocate_object()
 template<typename T>
 T* FlowContext::read_pin(const std::string& pin_name)
 {
-    return (T*)read_pin(pin_name);
+    return object_cast<T>(read_pin(pin_name));
 }
 
 
