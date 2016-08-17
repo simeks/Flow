@@ -11,53 +11,6 @@
 #include "RVF/RVF.h"
 #include "Image/ITK.h"
 
-static int string_to_pixel_type(const char* str)
-{
-    int pixel_t = image::PixelType_Unknown;
-    if (strcmp(str, "uint8") == 0)
-    {
-        pixel_t = image::PixelType_UInt8;
-    }
-    else if (strcmp(str, "uint16") == 0)
-    {
-        pixel_t = image::PixelType_UInt16;
-    }
-    else if (strcmp(str, "uint32") == 0)
-    {
-        pixel_t = image::PixelType_UInt32;
-    }
-    else if (strcmp(str, "float32") == 0)
-    {
-        pixel_t = image::PixelType_Float32;
-    }
-    else if (strcmp(str, "float64") == 0)
-    {
-        pixel_t = image::PixelType_Float64;
-    }
-    else if (strcmp(str, "vec3f") == 0)
-    {
-        pixel_t = image::PixelType_Vec3f;
-    }
-    else if (strcmp(str, "vec3d") == 0)
-    {
-        pixel_t = image::PixelType_Vec3d;
-    }
-    else if (strcmp(str, "vec4u8") == 0)
-    {
-        pixel_t = image::PixelType_Vec4u8;
-    }
-    else if (strcmp(str, "vec4f") == 0)
-    {
-        pixel_t = image::PixelType_Vec4f;
-    }
-    else if (strcmp(str, "vec4d") == 0)
-    {
-        pixel_t = image::PixelType_Vec4d;
-    }
-    
-    return pixel_t;
-}
-
 static PyObject* py_FlowImage_allocate_fn(PyObject* self, PyObject* args)
 {
     FlowImage* object = object_cast<FlowImage>(py_flow_object::owner(self));
@@ -86,7 +39,7 @@ static PyObject* py_FlowImage_allocate_fn(PyObject* self, PyObject* args)
             char* pixel_type_str = PyString_AsString(pixel_type);
             for (int i = 0; pixel_type_str[i]; ++i) pixel_type_str[i] = (char)tolower(pixel_type_str[i]);
 
-            int pixel_t = string_to_pixel_type(pixel_type_str);
+            int pixel_t = image::string_to_pixel_type(pixel_type_str);
             if(pixel_t == image::PixelType_Unknown)
             {
                 PyErr_SetString(PyExc_AttributeError, "Pixel type not recognized.");
@@ -316,7 +269,7 @@ static PyObject* py_FlowImage_from_array_fn(PyObject* self, PyObject* args)
             int hint = image::PixelType_Unknown;
             if (hint_str)
             {
-                hint = string_to_pixel_type(PyString_AsString(hint_str));
+                hint = image::string_to_pixel_type(PyString_AsString(hint_str));
             }
 
             if (!numpy::read_array(object, arr, hint))
@@ -537,7 +490,7 @@ int FlowImage::script_object_init(PyObject*, PyObject* args, PyObject* /*kwds*/)
             int hint = image::PixelType_Unknown;
             if (hint_str)
             {
-                hint = string_to_pixel_type(PyString_AsString(hint_str));
+                hint = image::string_to_pixel_type(PyString_AsString(hint_str));
             }
             else
             {
