@@ -73,6 +73,14 @@ INLINE Colorf Colorf::operator/=(double d)
 {
     return operator/=(float(d));
 }
+INLINE Colorf Colorf::operator+(double d) const
+{
+    return Colorf(float(r + d), float(g + d), float(b + d), float(a + d));
+}
+INLINE Colorf Colorf::operator-(double d) const
+{
+    return Colorf(float(r - d), float(g - d), float(b - d), float(a - d));
+}
 
 INLINE Colorf operator*(double d, const Colorf v)
 {
@@ -129,6 +137,14 @@ INLINE Colord Colord::operator/=(double d)
     b /= d;
     a /= d;
     return *this;
+}
+INLINE Colord Colord::operator+(double d) const
+{
+    return Colord(r + d, g + d, b + d, a + d);
+}
+INLINE Colord Colord::operator-(double d) const
+{
+    return Colord(r - d, g - d, b - d, a - d);
 }
 
 INLINE Colord operator*(double d, const Colord v)

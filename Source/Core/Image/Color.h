@@ -28,6 +28,9 @@ struct Colorf
 
     Colorf operator*=(double d);
     Colorf operator/=(double d);
+
+    Colorf operator+(double d) const;
+    Colorf operator-(double d) const;
 };
 
 struct Colord
@@ -46,6 +49,9 @@ struct Colord
     Colord operator+=(const Colord& v);
     Colord operator*=(double d);
     Colord operator/=(double d);
+
+    Colord operator+(double d) const;
+    Colord operator-(double d) const;
 };
 #include "Color.inl"
 

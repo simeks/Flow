@@ -19,6 +19,10 @@ public:
 
     Vec3<T> operator+(const Vec3<T>& v) const;
     Vec3<T> operator-(const Vec3<T>& v) const;
+
+    Vec3<T> operator+(double d) const;
+    Vec3<T> operator-(double d) const;
+
     // Element wise multiplication
     Vec3<T> operator*(const Vec3<T>& v) const;
     Vec3<T> operator*(double d) const;

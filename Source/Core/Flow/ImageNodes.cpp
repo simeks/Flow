@@ -7,8 +7,10 @@
 #include "FlowString.h"
 #include "FlowSystem.h"
 #include "FlowVector.h"
+#include "Image/Convert.h"
 #include "Image/Image.h"
 #include "Image/ITK.h"
+#include "Image/Normalize.h"
 #include "ImageNodes.h"
 #include "Platform/FilePath.h"
 #include "RVF/RVF.h"
@@ -134,11 +136,11 @@ public:
             }
         }
     }
-        const char* title() const OVERRIDE
+    const char* title() const OVERRIDE
     {
         return "Properties";
     }
-        const char* category() const OVERRIDE
+    const char* category() const OVERRIDE
     {
         return "Image";
     }
@@ -146,10 +148,120 @@ public:
 };
 IMPLEMENT_OBJECT(ImagePropertiesNode, "ImagePropertiesNode");
 
+class ImageConvertNode : public FlowNode
+{
+    DECLARE_OBJECT(ImageConvertNode, FlowNode);
+public:
+    ImageConvertNode()
+    {
+        add_pin("In", FlowPin::In);
+        add_pin("Format", FlowPin::In);
+        add_pin("Scale", FlowPin::In);
+        add_pin("Shift", FlowPin::In);
+        add_pin("Out", FlowPin::Out);
+    }
+
+    void run(FlowContext& context) OVERRIDE
+    {
+        FlowImage* img = context.read_pin<FlowImage>("In");
+        FlowObject* fmt = context.read_pin<FlowObject>("Format");
+        if (img && fmt)
+        {
+            int target_type = image::PixelType_Unknown;
+            if (fmt->is_a(NumericObject::static_class()))
+            {
+                target_type = (int)((NumericObject*)fmt)->as_int();
+            }
+            else if (fmt->is_a(FlowString::static_class()))
+            {
+                target_type = image::string_to_pixel_type(((FlowString*)fmt)->get().c_str());
+            }
+
+            if (target_type == image::PixelType_Unknown)
+                FATAL_ERROR("Failed to convert image. No supported target format was specified\n");
+
+            double scale = 1.0;
+            double shift = 0.0;
+
+            NumericObject* n = context.read_pin<NumericObject>("Scale");
+            if (n)
+                scale = n->as_float();
+
+            n = context.read_pin<NumericObject>("Shift");
+            if (n)
+                shift = n->as_float();
+
+            Image converted = image::convert_image(img->image(), target_type, scale, shift);
+            context.write_pin("Out", new FlowImage(converted));
+        }
+    }
+        
+    const char* title() const OVERRIDE
+    {
+        return "Convert";
+    }
+    const char* category() const OVERRIDE
+    {
+        return "Image";
+    }
+
+};
+IMPLEMENT_OBJECT(ImageConvertNode, "ImageConvertNode");
+
+
+class ImageNormalizeNode : public FlowNode
+{
+    DECLARE_OBJECT(ImageNormalizeNode, FlowNode);
+public:
+    ImageNormalizeNode()
+    {
+        add_pin("In", FlowPin::In);
+        add_pin("Min", FlowPin::In);
+        add_pin("Max", FlowPin::In);
+        add_pin("Out", FlowPin::Out);
+    }
+
+    void run(FlowContext& context) OVERRIDE
+    {
+        FlowImage* img = context.read_pin<FlowImage>("In");
+        if (img)
+        {
+            double min = 0.0;
+            double max = 1.0;
+
+            NumericObject* n = context.read_pin<NumericObject>("Min");
+            if (n)
+                min = n->as_float();
+
+            n = context.read_pin<NumericObject>("Max");
+            if (n)
+                max = n->as_float();
+
+            Image normalized = image::normalize_image(img->image(), min, max);
+            context.write_pin("Out", new FlowImage(normalized));
+        }
+    }
+
+    const char* title() const OVERRIDE
+    {
+        return "Normalize";
+    }
+    const char* category() const OVERRIDE
+    {
+        return "Image";
+    }
+
+};
+IMPLEMENT_OBJECT(ImageNormalizeNode, "ImageNormalizeNode");
+
+
+
 
 void flow_image_nodes::install()
 {
     FlowSystem::get().install_template(new ImageLoadNode());
     FlowSystem::get().install_template(new ImageSaveNode());
     FlowSystem::get().install_template(new ImagePropertiesNode());
+    FlowSystem::get().install_template(new ImageConvertNode());
+    FlowSystem::get().install_template(new ImageNormalizeNode());
 }
