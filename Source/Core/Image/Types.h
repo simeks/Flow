@@ -24,6 +24,7 @@ namespace image
     
     size_t pixel_size(int type);
     int string_to_pixel_type(const char* str);
+    const char* pixel_type_to_string(int type);
 
     template<typename T>
     struct pixel_type

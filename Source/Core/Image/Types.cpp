@@ -77,3 +77,31 @@ int image::string_to_pixel_type(const char* str)
 
     return pixel_t;
 }
+const char* image::pixel_type_to_string(int type)
+{
+    switch (type)
+    {
+    case image::PixelType_UInt8:
+        return "uint8";
+    case image::PixelType_UInt16:
+        return "uint16";
+    case image::PixelType_UInt32:
+        return "uint32";
+    case image::PixelType_Float32:
+        return "float32";
+    case image::PixelType_Float64:
+        return "float64";
+    case image::PixelType_Vec3f:
+        return "vec3f";
+    case image::PixelType_Vec3d:
+        return "vec3d";
+    case image::PixelType_Vec4u8:
+        return "vec4u8";
+    case image::PixelType_Vec4f:
+        return "vec4f";
+    case image::PixelType_Vec4d:
+        return "vec4d";
+    }
+
+    return "<unknown>";
+}

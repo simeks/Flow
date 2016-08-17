@@ -152,6 +152,11 @@ bool image::save_image(const std::string& file, const Image& image)
                 img = sitk::Image(size, sitk::sitkUInt16);
                 dest = (uint8_t*)img.GetBufferAsUInt16();
             }
+            else if (pixel_type == image::PixelType_Vec4u8)
+            {
+                img = sitk::Image(size, sitk::sitkVectorUInt8, 4);
+                dest = (uint8_t*)img.GetBufferAsUInt8();
+            }
             else if (pixel_type == image::PixelType_Float32 || 
                 pixel_type == image::PixelType_Float64)
             {
@@ -170,7 +175,8 @@ bool image::save_image(const std::string& file, const Image& image)
             }
             else
             {
-                console::error("Could not save as PNG, unsupported format (PixelType: %d).\n", pixel_type);
+                console::error("Could not save as PNG, unsupported format (PixelType: %s (%d)).\n", 
+                    pixel_type_to_string(pixel_type), pixel_type);
                 return false;
             }
 
