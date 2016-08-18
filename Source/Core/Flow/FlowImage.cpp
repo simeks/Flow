@@ -206,40 +206,7 @@ static PyObject* py_FlowImage_pixel_type_fn(PyObject* self)
     if (object)
     {
         PyObject* str = nullptr;
-
-        switch (object->pixel_type())
-        {
-        case image::PixelType_UInt8:
-            str = PyString_FromString("uint8");
-            break;
-        case image::PixelType_UInt16:
-            str = PyString_FromString("uint16");
-            break;
-        case image::PixelType_UInt32:
-            str = PyString_FromString("uint32");
-            break;
-        case image::PixelType_Float32:
-            str = PyString_FromString("float32");
-            break;
-        case image::PixelType_Float64:
-            str = PyString_FromString("float64");
-            break;
-        case image::PixelType_Vec3f:
-            str = PyString_FromString("vec3f");
-            break;
-        case image::PixelType_Vec4u8:
-            str = PyString_FromString("vec4u8");
-            break;
-        case image::PixelType_Vec4f:
-            str = PyString_FromString("vec4f");
-            break;
-        case image::PixelType_Vec4d:
-            str = PyString_FromString("vec4d");
-            break;
-        default:
-            str = PyString_FromString("unknown");
-            break;
-        }
+        str = PyString_FromString(image::pixel_type_to_string(object->pixel_type()));
 
         if (str != nullptr)
             return str;

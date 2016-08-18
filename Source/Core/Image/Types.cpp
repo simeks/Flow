@@ -103,5 +103,5 @@ const char* image::pixel_type_to_string(int type)
         return "vec4d";
     }
 
-    return "<unknown>";
+    return "unknown";
 }
