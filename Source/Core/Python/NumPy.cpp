@@ -139,7 +139,7 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
     if (!arr || !PyArray_Check(arr))
         return false;
 
-    PyArrayObject* arr_object = (PyArrayObject*)arr;
+    PyArrayObject* arr_object = (PyArrayObject*)PyArray_FROM_OF((PyObject*)arr, NPY_ARRAY_C_CONTIGUOUS);
     img->release_image();
 
     if (type_hint == image::PixelType_Vec3d || type_hint == image::PixelType_Vec3f)
@@ -154,9 +154,10 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
         npy_intp* dims = PyArray_DIMS(arr_object);
 
         std::vector<uint32_t> size;
+        size.resize(ndims - 1);
         for (int i = 0; i < ndims - 1; ++i)
         {
-            size.push_back((uint32_t)dims[i]);
+            size[ndims - 2 - i] = (uint32_t)dims[i];
         }
 
         Image img_data(size, type_hint, (const uint8_t*)PyArray_DATA(arr_object));
@@ -176,9 +177,10 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
         npy_intp* dims = PyArray_DIMS(arr_object);
 
         std::vector<uint32_t> size;
+        size.resize(ndims - 1);
         for (int i = 0; i < ndims - 1; ++i)
         {
-            size.push_back((uint32_t)dims[i]);
+            size[ndims - 2 - i] = (uint32_t)dims[i];
         }
 
         Image img_data(size, type_hint, (const uint8_t*)PyArray_DATA(arr_object));
@@ -191,9 +193,10 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
         npy_intp* dims = PyArray_DIMS(arr_object);
 
         std::vector<uint32_t> size;
-        for (int i = ndims - 1; i >= 0; --i)
+        size.resize(ndims - 1);
+        for (int i = 0; i < ndims - 1; ++i)
         {
-            size.push_back((uint32_t)dims[i]);
+            size[ndims - 2 - i] = (uint32_t)dims[i];
         }
 
         Image img_data(size, type_hint, (const uint8_t*)PyArray_DATA(arr_object));

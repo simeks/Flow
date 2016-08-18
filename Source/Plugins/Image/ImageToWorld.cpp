@@ -66,6 +66,7 @@ void ImageSliceToWorldNode::run(FlowContext& context)
         }
         else if (in->pixel_type() == image::PixelType_Vec4u8)
         {
+            // Perform the transformation on floating-point values and then convert back to RGBA32
             ImageRGBA32 img = transform_image_to_world<ImageColorf>(in->image(), z);
             out = new FlowImage(img);
         }

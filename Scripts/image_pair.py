@@ -38,9 +38,7 @@ class ColorPair(flow.Node):
             a = np.ones((s, 1)) * 255
 
             out = np.hstack((r, g, b, a))
-            print out.shape
-            out = out.reshape(list(a_data.shape[::-1]) + [4])
-            print out.shape
+            out = out.reshape(list(a_data.shape) + [4])
             
             result = flow.Image(out.astype('uint8'), 'vec4u8')
             result.set_origin(img_a.origin())
