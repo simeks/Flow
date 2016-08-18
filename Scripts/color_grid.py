@@ -64,14 +64,17 @@ class ColorGrid2D(flow.Node):
 
             grid_data = grid.to_array()
             color_data = color.to_array()
-
+            
             grid_data = grid_data.reshape(np.product(size), 1)
             grid_data = np.hstack((grid_data, grid_data, grid_data, grid_data))
+            print color_data.shape
             
             color_data = color_data.reshape(np.product(size), 4)
             color_data = color_data * grid_data
 
-            color_data = color_data.reshape([size[0], size[1], 4])
+            color_data = color_data.reshape([size[1], size[0], 4])
+            print color_data.shape
+
             result = flow.Image(color_data, 'vec4f')
             ctx.write_pin('Result', result)
 
@@ -106,7 +109,7 @@ class DeformationColor(flow.Node):
             # Normalize and color
             max = np.max(m)
             m = cm.jet(m / max)
-            m = m.reshape((size[0], size[1], 4))
+            m = m.reshape((size[1], size[0], 4))
 
             result = flow.Image(m.astype('float32'), 'vec4f')
             result.set_origin(df.origin())

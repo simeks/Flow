@@ -193,10 +193,10 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
         npy_intp* dims = PyArray_DIMS(arr_object);
 
         std::vector<uint32_t> size;
-        size.resize(ndims - 1);
-        for (int i = 0; i < ndims - 1; ++i)
+        size.resize(ndims);
+        for (int i = 0; i < ndims; ++i)
         {
-            size[ndims - 2 - i] = (uint32_t)dims[i];
+            size[ndims - 1 - i] = (uint32_t)dims[i];
         }
 
         Image img_data(size, type_hint, (const uint8_t*)PyArray_DATA(arr_object));
