@@ -8,11 +8,11 @@ def grid_img(w, h, step, thickness):
     
     for y in range(0, int(h / step)+1):
         for x in range(0, w):
-            for t in range(0, thickness): 
+            for t in range(0, min(thickness, h - y*step - 1)): 
                 img_data[y*step+t,x] = 1
     for x in range(0, int(w / step)+1):
         for y in range(0, h):
-            for t in range(0, thickness): 
+            for t in range(0, min(thickness, w - x*step - 1)): 
                 img_data[y,x*step+t] = 1
                 
     img = flow.Image(img_data, 'uint8')
@@ -104,7 +104,7 @@ class DeformationColor(flow.Node):
             m = np.sqrt(x*x + y*y + z*z)
             
             # Normalize and color
-            max = np.max(m)
+            max = 100 # np.max(m)
             m = cm.jet(m / max)
             m = m.reshape((size[1], size[0], 4))
 
