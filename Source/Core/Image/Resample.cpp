@@ -49,6 +49,8 @@ Image image::downsample_image(const Image& img, double scale)
         return downsample_image_tpl<ImageFloat32>(img, scale);
     case image::PixelType_Float64:
         return downsample_image_tpl<ImageFloat64>(img, scale);
+    case image::PixelType_Vec3u8:
+        return downsample_image_tpl<ImageVec3u8>(img, scale);
     case image::PixelType_Vec3f:
         return downsample_image_tpl<ImageVec3f>(img, scale);
     case image::PixelType_Vec3d:

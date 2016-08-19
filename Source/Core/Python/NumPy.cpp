@@ -22,12 +22,16 @@ PyObject* numpy::create_array(FlowImage* img)
     }
 
     PyObject* ret = nullptr;
-    if (img->pixel_type() == image::PixelType_Vec3f ||
+    if (img->pixel_type() == image::PixelType_Vec3u8 ||
+        img->pixel_type() == image::PixelType_Vec3f ||
         img->pixel_type() == image::PixelType_Vec3d)
     {
         int np_type = -1;
         switch (img->pixel_type())
         {
+        case image::PixelType_Vec3u8:
+            np_type = NPY_UINT8;
+            break;
         case image::PixelType_Vec3f:
             np_type = NPY_FLOAT32;
             break;
@@ -142,7 +146,9 @@ bool numpy::read_array(FlowImage* img, PyObject* arr, int type_hint)
     PyArrayObject* arr_object = (PyArrayObject*)PyArray_FROM_OF((PyObject*)arr, NPY_ARRAY_C_CONTIGUOUS);
     img->release_image();
 
-    if (type_hint == image::PixelType_Vec3d || type_hint == image::PixelType_Vec3f)
+    if (type_hint == image::PixelType_Vec3u8 || 
+        type_hint == image::PixelType_Vec3d || 
+        type_hint == image::PixelType_Vec3f)
     {
         int ndims = PyArray_NDIM(arr_object);
         if (ndims > 4)

@@ -17,6 +17,8 @@ size_t image::pixel_size(int type)
         return sizeof(float);
     case PixelType_Float64:
         return sizeof(double);
+    case PixelType_Vec3u8:
+        return sizeof(Vec3u8);
     case PixelType_Vec3f:
         return sizeof(Vec3f);
     case PixelType_Vec3d:
@@ -53,6 +55,10 @@ int image::string_to_pixel_type(const char* str)
     else if (strcmp(str, "float64") == 0)
     {
         pixel_t = image::PixelType_Float64;
+    }
+    else if (strcmp(str, "vec3u8") == 0)
+    {
+        pixel_t = image::PixelType_Vec3u8;
     }
     else if (strcmp(str, "vec3f") == 0)
     {
@@ -91,6 +97,8 @@ const char* image::pixel_type_to_string(int type)
         return "float32";
     case image::PixelType_Float64:
         return "float64";
+    case image::PixelType_Vec3u8:
+        return "vec3u8";
     case image::PixelType_Vec3f:
         return "vec3f";
     case image::PixelType_Vec3d:

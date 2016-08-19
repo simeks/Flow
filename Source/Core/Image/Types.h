@@ -15,6 +15,7 @@ namespace image
         PixelType_UInt32,
         PixelType_Float32,
         PixelType_Float64,
+        PixelType_Vec3u8,
         PixelType_Vec3f,
         PixelType_Vec3d,
         PixelType_Vec4u8,
@@ -51,6 +52,7 @@ namespace image
     PIXEL_TYPE_TRAIT(uint32_t, image::PixelType_UInt32);
     PIXEL_TYPE_TRAIT(float, image::PixelType_Float32);
     PIXEL_TYPE_TRAIT(double, image::PixelType_Float64);
+    PIXEL_TYPE_TRAIT(Vec3u8, image::PixelType_Vec3u8);
     PIXEL_TYPE_TRAIT(Vec3f, image::PixelType_Vec3f);
     PIXEL_TYPE_TRAIT(Vec3d, image::PixelType_Vec3d);
     PIXEL_TYPE_TRAIT(RGBA32, image::PixelType_Vec4u8);

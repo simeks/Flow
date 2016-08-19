@@ -101,6 +101,7 @@ void RegistrationNode::run(FlowContext& context)
             params.moving.push_back(ImageColorf(moving_img));
 
             break;
+        case image::PixelType_Vec3u8:
         case image::PixelType_Vec3f:
         case image::PixelType_Vec3d:
         default:

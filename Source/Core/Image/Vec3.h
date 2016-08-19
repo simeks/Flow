@@ -51,6 +51,7 @@ template<typename T> const Vec3<T> Vec3<T>::UnitX(1, 0, 0);
 template<typename T> const Vec3<T> Vec3<T>::UnitY(0, 1, 0);
 template<typename T> const Vec3<T> Vec3<T>::UnitZ(0, 0, 1);
 
+typedef Vec3<uint8_t> Vec3u8;
 typedef Vec3<float> Vec3f;
 typedef Vec3<double> Vec3d;
 typedef Vec3<int> Vec3i;

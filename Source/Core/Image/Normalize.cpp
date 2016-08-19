@@ -42,6 +42,8 @@ Image image::normalize_image(const Image& src, double min, double max)
         return ::normalize_image<ImageFloat32>(src, min, max);
     case image::PixelType_Float64:
         return ::normalize_image<ImageFloat64>(src, min, max);
+    case image::PixelType_Vec3u8:
+        return ::normalize_image<ImageVec3u8>(src, min, max);
     case image::PixelType_Vec3f:
         return ::normalize_image<ImageVec3f>(src, min, max);
     case image::PixelType_Vec3d:
