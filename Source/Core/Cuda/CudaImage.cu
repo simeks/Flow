@@ -23,6 +23,11 @@ namespace
             int e = (int)image::pixel_size(pixel_type) * 8;
             return cudaCreateChannelDesc(e, 0, 0, 0, cudaChannelFormatKindFloat);
         }
+        case image::PixelType_Vec3u8:
+        {
+            int e = (int)sizeof(uint8_t) * 8;
+            return cudaCreateChannelDesc(e, e, e, 0, cudaChannelFormatKindUnsigned);
+        }
         case image::PixelType_Vec3f:
         {
             int e = (int)sizeof(float) * 8;

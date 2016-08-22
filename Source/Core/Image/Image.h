@@ -146,6 +146,7 @@ typedef ImageTpl<uint16_t> ImageUInt16;
 typedef ImageTpl<uint32_t> ImageUInt32;
 typedef ImageTpl<float> ImageFloat32;
 typedef ImageTpl<double> ImageFloat64;
+typedef ImageTpl<Vec3u8> ImageVec3u8;
 typedef ImageTpl<Vec3f> ImageVec3f;
 typedef ImageTpl<Vec3d> ImageVec3d;
 typedef ImageTpl<RGBA32> ImageRGBA32;

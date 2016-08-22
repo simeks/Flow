@@ -88,6 +88,10 @@ Image image::load_image(const std::string& file)
             {
                 ret.create(img.GetSize(), image::PixelType_Vec4u8, (uint8_t*)img.GetBufferAsUInt8());
             }
+            else if (img.GetNumberOfComponentsPerPixel() == 3)
+            {
+                ret.create(img.GetSize(), image::PixelType_Vec3u8, (uint8_t*)img.GetBufferAsUInt8());
+            }
             break;
         }
         }
@@ -152,6 +156,11 @@ bool image::save_image(const std::string& file, const Image& image)
                 img = sitk::Image(size, sitk::sitkUInt16);
                 dest = (uint8_t*)img.GetBufferAsUInt16();
             }
+            else if (pixel_type == image::PixelType_Vec3u8)
+            {
+                img = sitk::Image(size, sitk::sitkVectorUInt8, 3);
+                dest = (uint8_t*)img.GetBufferAsUInt8();
+            }
             else if (pixel_type == image::PixelType_Vec4u8)
             {
                 img = sitk::Image(size, sitk::sitkVectorUInt8, 4);
@@ -209,6 +218,11 @@ bool image::save_image(const std::string& file, const Image& image)
             {
                 img = sitk::Image(size, sitk::sitkFloat64);
                 dest = (uint8_t*)img.GetBufferAsDouble();
+            }
+            else if (pixel_type == image::PixelType_Vec3u8)
+            {
+                img = sitk::Image(size, sitk::sitkVectorUInt8, 3);
+                dest = (uint8_t*)img.GetBufferAsUInt8();
             }
             else if (pixel_type == image::PixelType_Vec3f)
             {
