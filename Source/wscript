@@ -14,11 +14,12 @@ def find_files(bld, p):
 	return bld.path.ant_glob(p, excl=excl)
 
 def build(bld):
-	print bld.env
 	bld.shlib(
 		features='pyembed numpy simpleitk',
 		target='Core',
-		source=bld.find_files('Core/**/*.cpp'), 
+		source=bld.find_files(['Core/**/*.cpp', 'Core/**/*.cu']), 
 		includes='. Core',
-		defines='FLOW_CORE_EXPORTS'
+		defines='FLOW_CORE_EXPORTS',
+		lib=bld.env['LIBS'],
+		use='CUDA CUDART'
 	)

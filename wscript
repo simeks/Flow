@@ -57,6 +57,7 @@ class msvs_2013(msvs.msvs_generator):
 def options(opt):
 	opt.load('compiler_cxx')
 	opt.load('python')
+	opt.load('cuda')
 
 def configure_msvc_x64_common(conf):
 	flags = [
@@ -81,6 +82,9 @@ def configure_msvc_x64_common(conf):
 		'_SCL_SECURE_NO_DEPRECATE',
 	]
 	conf.env['LINKFLAGS'] += [ '/MACHINE:X64' ]
+	conf.env['LIBS'] += ["kernel32", "user32", "gdi32", "comdlg32", "advapi32", "Ws2_32", "psapi", "Rpcrt4", "Shell32", "Ole32"]
+	
+	conf.env['CUDAFLAGS'] += ['--use-local-env', '--cl-version 2013', '--machine 64', '--compile', '-Xcompiler "'+' '.join(flags)+'Xcudafe "--diag_suppress=field_without_dll_interface"']
 
 def configure_msvc_x64_debug(conf):
 	configure_msvc_x64_common(conf)
@@ -89,6 +93,7 @@ def configure_msvc_x64_debug(conf):
 	conf.env['CXXFLAGS'] += flags
 	conf.env['DEFINES'] += ['_DEBUG', 'FLOW_BUILD_DEBUG']
 	conf.env['LIBPATH_SIMPLEITK'] = os.path.join(conf.env['SIMPLEITK_BUILD'], 'SimpleITK-build', 'lib', 'Debug')
+	conf.env['CUDAFLAGS'] += ["-G", "-g"]
 
 def configure_msvc_x64_release(conf):
 	configure_msvc_x64_common(conf)
@@ -122,6 +127,7 @@ def init_simpleitk(self):
 def configure(conf):
 	conf.load('compiler_cxx')
 	conf.load('python')
+	conf.load('cuda')
 	conf.check_python_version()
 	conf.check_python_headers('pyembed')
 
@@ -138,7 +144,16 @@ def configure(conf):
 	conf.env['LIBPATH_NUMPY'] = conf.env['LIBPATH_PYEMBED']
 
 	#TODO:
-	conf.env['SIMPLEITK_BUILD'] = 'C:\\dev\\SimpleITK-0.9.1\\build_sharedlib'
+	
+	simpleitk_path = ''
+	for p in ['C:\\dev\\SimpleITK-0.9.1\\build_sharedlib', 'D:\\SimpleITK-0.9.1\\build_sharedlib']:
+		if os.path.isdir(p):
+			simpleitk_path = p
+
+	if simpleitk_path == '':
+		conf.fatal('Failed to determine path for SimpleITK.')
+
+	conf.env['SIMPLEITK_BUILD'] = simpleitk_path
 	conf.env['INCLUDES_SIMPLEITK'] = [os.path.join(conf.env['SIMPLEITK_BUILD'],'include','SimpleITK-0.9')]
 	conf.env['LIB_SIMPLEITK'] = ['SimpleITKIO-0.9', 'SimpleITKCommon-0.9', 'SimpleITKExplicit-0.9']
 
