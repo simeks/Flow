@@ -1,0 +1,24 @@
+from waflib.Configure import conf
+
+@conf
+def find_files(bld, p):
+	excl = []
+
+	if bld.cmd != 'msvs2013':
+		excl.append('**/test/*')
+		if bld.env['PLATFORM'] != 'win64':
+			excl.append('**/windows/*')
+		if bld.env['PLATFORM'] != 'macosx':
+			excl.append('**/macosx/*')
+
+	return bld.path.ant_glob(p, excl=excl)
+
+def build(bld):
+	print bld.env
+	bld.shlib(
+		features='pyembed numpy simpleitk',
+		target='Core',
+		source=bld.find_files('Core/**/*.cpp'), 
+		includes='. Core',
+		defines='FLOW_CORE_EXPORTS'
+	)

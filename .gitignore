@@ -6,3 +6,5 @@
 t2-output/
 Scripts/*.pyc
 External/
+waf-1.9.3-*
+build/
