@@ -4,6 +4,10 @@
 
 #include "Assert.h"
 
+#ifdef FLOW_PLATFORM_WINDOWS
+#include "Platform/WindowsWrapper.h"
+#endif
+
 namespace assert_util
 {
 

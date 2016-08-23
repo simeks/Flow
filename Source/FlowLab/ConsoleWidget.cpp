@@ -35,11 +35,6 @@ CommandInvoker::~CommandInvoker()
 
 void CommandInvoker::invoke()
 {
-    for (int i = 0; i < 10; ++i)
-    {
-        Sleep(1000);
-        console::print("%d\n", i);
-    }
     emit on_command_finished();
 }
 

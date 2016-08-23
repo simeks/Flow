@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "Platform/WindowsWrapper.h"
 
 #include "../Platform.h"
 
