@@ -1,5 +1,7 @@
 from waflib.Configure import conf
 
+SUBFOLDERS = ['Plugins']
+
 @conf
 def find_files(bld, p):
 	excl = []
@@ -16,6 +18,7 @@ def find_files(bld, p):
 
 def build(bld):
 	v = bld.env
+	print v
 	bld.shlib(
 		features='pyembed numpy simpleitk cuda',
 		target='Core',
@@ -25,3 +28,28 @@ def build(bld):
 		lib=v.LIBS,
 		use='CUDA CUDART'
 	)
+	bld.program(
+		target='FlowCLI',
+		source=bld.find_files(['FlowCLI/**/*.cpp']), 
+		includes='. FlowCLI',
+		use='Core'
+	)
+	bld.program(
+		features='qt5',
+		uselib='QT5CORE QT5GUI QT5WIDGETS',
+		target='FlowLab',
+		source=bld.find_files(['FlowLab/**/*.cpp']) + ['FlowLab/resources.qrc'], 
+		moc=[
+			'FlowLab/MainWindow.h', 
+			'FlowLab/Flow/QtFlowDiagramScene.h', 
+			'FlowLab/Flow/QtFlowDiagramView.h', 
+			'FlowLab/Flow/QtFlowNode.h', 
+			'FlowLab/Flow/QtFlowPin.h', 
+			'FlowLab/Flow/QtFlowConnection.h', 
+			'FlowLab/Flow/QtNodePropertyWidget.h', 
+			'FlowLab/ConsoleWidget.h'
+			],
+		includes='. FlowCLI',
+		use='Core'
+	)
+	bld.recurse(SUBFOLDERS, mandatory=False)

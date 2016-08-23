@@ -44,6 +44,8 @@ class vsnode_target(msvs.vsnode_target):
 	def get_build_command(self, props):
 		p = self.get_build_params(props)
 		return "%s build_%s_%s %s" % (p[0], platform_vs_to_waf(props.platform), configuration_vs_to_waf(props.configuration), p[1])
+	#def collect_source(self):
+		# TODO: likely to be required		
 		
 class msvs_2013(msvs.msvs_generator):
 	cmd = 'msvs2013'
@@ -58,10 +60,11 @@ def options(opt):
 	opt.load('compiler_cxx')
 	opt.load('python')
 	opt.load('cuda')
+	opt.load('qt5')
 
 def configure_msvc_x64_common(conf):
 	flags = [
-		'/WX', '/W4', '/MP',
+		'/FS', '/WX', '/W4', '/MP',
 		'/EHsc',
 		'/wd4127', # C4127: conditional expression is constant.
 		'/wd4251', # C4251: * needs to have dll-interface to be used by clients of class '*'.
@@ -134,6 +137,7 @@ def configure(conf):
 	conf.load('compiler_cxx')
 	conf.load('python')
 	conf.load('cuda')
+	conf.load('qt5')
 	conf.check_python_version()
 	conf.check_python_headers('pyembed')
 

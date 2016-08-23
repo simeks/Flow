@@ -1,0 +1,25 @@
+from waflib.Configure import conf
+
+
+def build(bld):
+	v = bld.env
+	bld.shlib(
+		target='Plugin_Image',
+		source=bld.find_files(['Image/**/*.cpp']), 
+		includes='. .. Image',
+		use='Core'
+	)
+	bld.shlib(
+		target='Plugin_Imiomics',
+		source=bld.find_files(['Imiomics/**/*.cpp']), 
+		includes='. .. Imiomics ../../External/sqlite',
+		lib='../../External/sqlite/sqlite3',
+		use='Core'
+	)
+	bld.shlib(
+		features='cuda',
+		target='Plugin_Registration',
+		source=bld.find_files(['Registration/**/*.cpp', 'Registration/**/*.cu']), 
+		includes='. .. Registration ../../External/gco-v3.0',
+		use='Core'
+	)

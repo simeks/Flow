@@ -1,7 +1,7 @@
 #ifndef __CUDA_CUDA_H__
 #define __CUDA_CUDA_H__
 
-#include "Common.h"
+#include <Core/Common.h>
 
 #include <cuda_runtime.h>
 
