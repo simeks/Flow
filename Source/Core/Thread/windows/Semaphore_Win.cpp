@@ -1,6 +1,7 @@
 // Copyright 2008-2014 Simon Ekström
 
 #include "Common.h"
+#include "Platform/WindowsWrapper.h"
 
 #include "../Semaphore.h"
 

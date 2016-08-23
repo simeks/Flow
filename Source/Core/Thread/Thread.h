@@ -3,6 +3,8 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
+#include "Platform/WindowsWrapper.h"
+
 #include "Lock.h"
 #include "Semaphore.h"
 #include "Event.h"

@@ -3,6 +3,7 @@
 #include "StringConv.h"
 
 #ifdef FLOW_PLATFORM_WINDOWS
+#include "Platform/WindowsWrapper.h"
 
 bool convert_string(const char* src, wchar_t* dest, size_t dest_size)
 {

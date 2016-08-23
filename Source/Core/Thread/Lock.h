@@ -3,6 +3,7 @@
 #ifndef __THREAD_LOCK_H__
 #define __THREAD_LOCK_H__
 
+#include "Platform/WindowsWrapper.h"
 
 /// @brief Win32 specific mutex
 class Mutex

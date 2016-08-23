@@ -1,4 +1,5 @@
 #include "Common.h"
+#include "Platform/WindowsWrapper.h"
 
 #include "../Process.h"
 #include "../FileUtil.h"

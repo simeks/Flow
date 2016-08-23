@@ -1,6 +1,7 @@
 #ifndef __CUDA_IMAGE_H__
 #define __CUDA_IMAGE_H__
 
+#include <Core/API.h>
 #include <Core/Image/Vec3.h>
 
 class Image;

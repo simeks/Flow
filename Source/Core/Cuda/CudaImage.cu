@@ -1,4 +1,3 @@
-#include "Common.h"
 #include "Cuda.h"
 #include "CudaImage.h"
 
@@ -9,7 +8,7 @@ namespace
     cudaChannelFormatDesc create_channel_desc(int pixel_type)
     {
         switch (pixel_type)
-        {
+        { 
         case image::PixelType_UInt8:
         case image::PixelType_UInt16:
         case image::PixelType_UInt32:

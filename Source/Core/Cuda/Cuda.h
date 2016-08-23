@@ -1,6 +1,8 @@
 #ifndef __CUDA_CUDA_H__
 #define __CUDA_CUDA_H__
 
+#include "Common.h"
+
 #include <cuda_runtime.h>
 
 template<typename T>

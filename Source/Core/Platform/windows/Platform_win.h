@@ -3,26 +3,13 @@
 #ifndef _PLATFORM_WIN32_H
 #define _PLATFORM_WIN32_H
 
-
-//#define _CRT_SECURE_NO_WARNINGS
-
-#define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
-#define NODRAWTEXT // DrawText()
-
-#include <windows.h>
-
-// Undefine annoying windows macros
-#undef min
-#undef max
-#undef MB_RIGHT
-
-#define DEBUG_BREAK __debugbreak()
-
 #ifndef __NVCC__
 #define ANALYSIS_ASSUME(expr) __analysis_assume(expr)
 #else
 #define ANALYSIS_ASSUME(expr)
 #endif
+
+#define DEBUG_BREAK __debugbreak()
 
 #define INLINE __forceinline
 #define OVERRIDE override

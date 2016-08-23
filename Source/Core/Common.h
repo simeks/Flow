@@ -9,6 +9,7 @@
 #include <errno.h>
 #include <memory>
 #include <type_traits>
+#include <cstdarg>
 
 #include <vector>
 #include <map>
@@ -25,7 +26,6 @@
 #include "Platform/StringConv.h"
 #include "Util.h"
 #include "Memory/Memory.h"
-#include "Memory/MemoryPool.h"
 #include "NonCopyable.h"
 #include "Console/Console.h"
 

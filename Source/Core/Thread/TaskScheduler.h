@@ -4,6 +4,7 @@
 #define __CORE_TASKSCHEDULER_H__
 
 #include "Thread.h"
+#include "Memory/MemoryPool.h"
 
 /// Maximum total number of worker threads
 #define MAX_WORKER_THREAD_COUNT 7

@@ -2,6 +2,8 @@
 #include <Core/Platform/Guid.h>
 #include <Tools/Testing/Framework.h>
 
+#include <Core/Platform/WindowsWrapper.h>
+
 using namespace testing;
 
 // {A32FA86D-D8C5-4696-B84A-DF2A419E26C1}
