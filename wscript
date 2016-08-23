@@ -84,7 +84,7 @@ def configure_msvc_x64_common(conf):
 	conf.env['LINKFLAGS'] += [ '/MACHINE:X64' ]
 	conf.env['LIBS'] += ["kernel32", "user32", "gdi32", "comdlg32", "advapi32", "Ws2_32", "psapi", "Rpcrt4", "Shell32", "Ole32"]
 	
-	conf.env['CUDAFLAGS'] += ['--use-local-env', '--cl-version 2013', '--machine 64', '--compile', '-Xcompiler "'+' '.join(flags)+'Xcudafe "--diag_suppress=field_without_dll_interface"']
+	conf.env['CUDAFLAGS'] += ['--use-local-env', '--cl-version=2013', '--machine=64', '--compile', '-Xcudafe="--diag_suppress=field_without_dll_interface"']
 
 def configure_msvc_x64_debug(conf):
 	configure_msvc_x64_common(conf)
@@ -93,7 +93,7 @@ def configure_msvc_x64_debug(conf):
 	conf.env['CXXFLAGS'] += flags
 	conf.env['DEFINES'] += ['_DEBUG', 'FLOW_BUILD_DEBUG']
 	conf.env['LIBPATH_SIMPLEITK'] = os.path.join(conf.env['SIMPLEITK_BUILD'], 'SimpleITK-build', 'lib', 'Debug')
-	conf.env['CUDAFLAGS'] += ["-G", "-g"]
+	conf.env['CUDAFLAGS'] += ['-G', '-g', '-Xcompiler="'+' '.join(conf.env['CXXFLAGS'])+'"']
 
 def configure_msvc_x64_release(conf):
 	configure_msvc_x64_common(conf)
@@ -102,6 +102,7 @@ def configure_msvc_x64_release(conf):
 	conf.env['CXXFLAGS'] += flags
 	conf.env['DEFINES'] += ['NDEBUG', 'FLOW_BUILD_RELEASE']
 	conf.env['LIBPATH_SIMPLEITK'] = os.path.join(conf.env['SIMPLEITK_BUILD'], 'SimpleITK-build', 'lib', 'Release')
+	conf.env['CUDAFLAGS'] += ['-Xcompiler="'+' '.join(conf.env['CXXFLAGS'])+'"']
 
 @before_method('propagate_uselib_vars')
 @feature('numpy')

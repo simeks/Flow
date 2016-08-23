@@ -15,7 +15,7 @@ def find_files(bld, p):
 
 def build(bld):
 	bld.shlib(
-		features='pyembed numpy simpleitk',
+		features='pyembed numpy simpleitk cuda',
 		target='Core',
 		source=bld.find_files(['Core/**/*.cpp', 'Core/**/*.cu']), 
 		includes='. Core',
