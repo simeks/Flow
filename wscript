@@ -22,21 +22,21 @@ def supported_platforms():
 	return PLATFORMS[p]
 
 def platform_vs_to_waf(p):
-	if platform == 'Win32':
+	if p == 'Win32':
 		return 'win32'
-	if platform == 'x64':
+	if p == 'x64':
 		return 'win64'
 
 def configuration_vs_to_waf(p):
-	if platform == 'Debug':
+	if p == 'Debug':
 		return 'debug'
-	if platform == 'Release':
+	if p == 'Release':
 		return 'release'
 
 def configuration_waf_to_vs(p):
-	if platform == 'debug':
+	if p == 'debug':
 		return 'Debug'
-	if platform == 'release':
+	if p == 'release':
 		return 'Release'
 
 
@@ -68,10 +68,11 @@ def configure_msvc_x64_common(conf):
 		'/openmp',
 		]
 
-	conf.env['CFLAGS'] += flags
-	conf.env['CXXFLAGS'] += flags
+	v = conf.env
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
 
-	conf.env['DEFINES'] += [
+	v.DEFINES += [
 		'_WIN32', 
 		'_WIN64', 
 		'FLOW_PLATFORM_WINDOWS', 
@@ -81,28 +82,32 @@ def configure_msvc_x64_common(conf):
 		'_CRT_SECURE_NO_WARNINGS',
 		'_SCL_SECURE_NO_DEPRECATE',
 	]
-	conf.env['LINKFLAGS'] += [ '/MACHINE:X64' ]
-	conf.env['LIBS'] += ["kernel32", "user32", "gdi32", "comdlg32", "advapi32", "Ws2_32", "psapi", "Rpcrt4", "Shell32", "Ole32"]
+	v.LINKFLAGS += [ '/MACHINE:X64' ]
+	v.LIBS += ["kernel32", "user32", "gdi32", "comdlg32", "advapi32", "Ws2_32", "psapi", "Rpcrt4", "Shell32", "Ole32"]
 	
-	conf.env['CUDAFLAGS'] += ['--use-local-env', '--cl-version=2013', '--machine=64', '--compile', '-Xcudafe="--diag_suppress=field_without_dll_interface"']
+	v.CUDAFLAGS += ['--use-local-env', '--cl-version=2013', '--machine=64', '--compile', '-Xcudafe="--diag_suppress=field_without_dll_interface"']
 
 def configure_msvc_x64_debug(conf):
 	configure_msvc_x64_common(conf)
 	flags = ['/MDd', '/Od']
-	conf.env['CFLAGS'] += flags
-	conf.env['CXXFLAGS'] += flags
-	conf.env['DEFINES'] += ['_DEBUG', 'FLOW_BUILD_DEBUG']
-	conf.env['LIBPATH_SIMPLEITK'] = os.path.join(conf.env['SIMPLEITK_BUILD'], 'SimpleITK-build', 'lib', 'Debug')
-	conf.env['CUDAFLAGS'] += ['-G', '-g', '-Xcompiler="'+' '.join(conf.env['CXXFLAGS'])+'"']
+
+	v = conf.env
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
+	v.DEFINES += ['_DEBUG', 'FLOW_BUILD_DEBUG']
+	v.LIBPATH_SIMPLEITK = os.path.join(v.SIMPLEITK_BUILD, 'SimpleITK-build', 'lib', 'Debug')
+	v.CUDAFLAGS += ['-G', '-g', '-Xcompiler="'+' '.join(v.CXXFLAGS)+'"']
 
 def configure_msvc_x64_release(conf):
 	configure_msvc_x64_common(conf)
 	flags = ['/MD', '/O2']
-	conf.env['CFLAGS'] += flags
-	conf.env['CXXFLAGS'] += flags
-	conf.env['DEFINES'] += ['NDEBUG', 'FLOW_BUILD_RELEASE']
-	conf.env['LIBPATH_SIMPLEITK'] = os.path.join(conf.env['SIMPLEITK_BUILD'], 'SimpleITK-build', 'lib', 'Release')
-	conf.env['CUDAFLAGS'] += ['-Xcompiler="'+' '.join(conf.env['CXXFLAGS'])+'"']
+
+	v = conf.env
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
+	v.DEFINES += ['NDEBUG', 'FLOW_BUILD_RELEASE']
+	v.LIBPATH_SIMPLEITK = os.path.join(v.SIMPLEITK_BUILD, 'SimpleITK-build', 'lib', 'Release')
+	v.CUDAFLAGS += ['-Xcompiler="'+' '.join(v.CXXFLAGS)+'"']
 
 @before_method('propagate_uselib_vars')
 @feature('numpy')
@@ -132,17 +137,19 @@ def configure(conf):
 	conf.check_python_version()
 	conf.check_python_headers('pyembed')
 
+	v = conf.env
+
 	# Look for numpy
 	numpy_inc_path = ''
-	for p in [__import__('numpy').get_include(), os.path.join(conf.env['PYTHONDIR'], 'numpy', 'core', 'include')]:
+	for p in [__import__('numpy').get_include(), os.path.join(v.PYTHONDIR, 'numpy', 'core', 'include')]:
 		if os.path.isfile(os.path.join(p, 'numpy', 'arrayobject.h')):
 			numpy_inc_path = p
 
 	if numpy_inc_path == '':
 		conf.fatal('Failed to determine include path for numpy.')
 
-	conf.env['INCLUDES_NUMPY'] = [numpy_inc_path]
-	conf.env['LIBPATH_NUMPY'] = conf.env['LIBPATH_PYEMBED']
+	v.INCLUDES_NUMPY = [numpy_inc_path]
+	v.LIBPATH_NUMPY = v.LIBPATH_PYEMBED
 
 	#TODO:
 	
@@ -154,9 +161,9 @@ def configure(conf):
 	if simpleitk_path == '':
 		conf.fatal('Failed to determine path for SimpleITK.')
 
-	conf.env['SIMPLEITK_BUILD'] = simpleitk_path
-	conf.env['INCLUDES_SIMPLEITK'] = [os.path.join(conf.env['SIMPLEITK_BUILD'],'include','SimpleITK-0.9')]
-	conf.env['LIB_SIMPLEITK'] = ['SimpleITKIO-0.9', 'SimpleITKCommon-0.9', 'SimpleITKExplicit-0.9']
+	v.SIMPLEITK_BUILD = simpleitk_path
+	v.INCLUDES_SIMPLEITK = [os.path.join(v.SIMPLEITK_BUILD,'include','SimpleITK-0.9')]
+	v.LIB_SIMPLEITK = ['SimpleITKIO-0.9', 'SimpleITKCommon-0.9', 'SimpleITKExplicit-0.9']
 
 	variant_configure = {
 		'win64_debug': configure_msvc_x64_debug,
@@ -173,23 +180,24 @@ def configure(conf):
 	conf.recurse(SUBFOLDERS, mandatory=False)
 
 def build(bld):
+	v = bld.env
 	if bld.cmd == 'msvs2013':
 		print 'Generating MSVS files'
-		bld.solution_name = APPAME + '.sln'
+		bld.solution_name = APPNAME + '.sln'
 		bld.configurations = [configuration_waf_to_vs(c) for c in CONFIGURATIONS]
-		bld.platforms = ['x64']		
+		bld.platforms = ['x64']
 		bld.projects_dir = bld.srcnode.make_node('.depproj')
 		bld.projects_dir.mkdir()
 
-		bld.env['PLATFORM'] = 'msvs2013'
-		bld.env['CONFIGURATION'] = ''
+		v.PLATFORM = 'msvs2013'
+		v.CONFIGURATION = ''
 	else:
 		if not bld.variant:
 			# A variant needs to be specified, the variant is of the form "<platform>_<configuration>"
 			bld.fatal('No variant specified, read the comments in the wscript file!')
 
-		bld.env['PLATFORM'] = bld.platform
-		bld.env['CONFIGURATION'] = bld.configuration
+		v.PLATFORM = bld.platform
+		v.CONFIGURATION = bld.configuration
 
 		print 'Variant: %s' % bld.variant
 	bld.recurse(SUBFOLDERS, mandatory=False)

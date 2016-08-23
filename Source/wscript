@@ -4,22 +4,24 @@ from waflib.Configure import conf
 def find_files(bld, p):
 	excl = []
 
+	v = bld.env
 	if bld.cmd != 'msvs2013':
 		excl.append('**/test/*')
-		if bld.env['PLATFORM'] != 'win64':
+		if v.PLATFORM != 'win64':
 			excl.append('**/windows/*')
-		if bld.env['PLATFORM'] != 'macosx':
+		if v.PLATFORM != 'macosx':
 			excl.append('**/macosx/*')
 
 	return bld.path.ant_glob(p, excl=excl)
 
 def build(bld):
+	v = bld.env
 	bld.shlib(
 		features='pyembed numpy simpleitk cuda',
 		target='Core',
 		source=bld.find_files(['Core/**/*.cpp', 'Core/**/*.cu']), 
 		includes='. Core',
 		defines='FLOW_CORE_EXPORTS',
-		lib=bld.env['LIBS'],
+		lib=v.LIBS,
 		use='CUDA CUDART'
 	)
