@@ -7,19 +7,20 @@ def build(bld):
 		target='Plugin_Image',
 		source=bld.find_files(['Image/**/*.cpp']), 
 		includes='. .. Image',
-		use='Core'
+		use='Core',
+		install_path = '${PREFIX}/Plugins',
 	)
 	bld.shlib(
 		target='Plugin_Imiomics',
 		source=bld.find_files(['Imiomics/**/*.cpp']), 
-		includes='. .. Imiomics ../../External/sqlite',
-		lib='../../External/sqlite/sqlite3',
-		use='Core'
+		includes='. .. Imiomics',
+		use='Core SQLITE3',
+		install_path = '${PREFIX}/Plugins',
 	)
 	bld.shlib(
-		features='cuda',
 		target='Plugin_Registration',
 		source=bld.find_files(['Registration/**/*.cpp', 'Registration/**/*.cu']), 
 		includes='. .. Registration ../../External/gco-v3.0',
-		use='Core'
+		use='Core CUDA CUDART',
+		install_path = '${PREFIX}/Plugins',
 	)
