@@ -244,7 +244,9 @@ def configure(conf):
 	v.LIBPATH_NUMPY = v.LIBPATH_PYEMBED
 
 	# SimpleITK
-	sitk_root = conf.root.find_node(conf.options.simpleitk_root)
+	sitk_root = None
+	if conf.options.simpleitk_root:
+		sitk_root = conf.root.find_node(conf.options.simpleitk_root)
 	# TODO: Path
 	for p in ['C:\\dev\\SimpleITK-0.9.1\\build_sharedlib', 'D:\\SimpleITK-0.9.1\\build_sharedlib']:
 		if sitk_root != None:
