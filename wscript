@@ -12,9 +12,9 @@ SUBFOLDERS = ['Source']
 top = '.'
 out = 'build'
 
-import os
+import os, shutil
 from waflib.extras import msvs
-from waflib import Utils
+from waflib import Utils, Task
 from waflib.TaskGen import extension, before_method, after_method, feature
 from waflib.Configure import conf
 
@@ -80,6 +80,73 @@ class msvs_2013(msvs.msvs_generator):
 	def init(self):
 		msvs.msvs_generator.init(self)
 		self.vsnode_target = vsnode_target
+
+class copy_file(Task.Task):
+	color = 'PINK'
+	def run(self):
+		shutil.copyfile(self.inputs[0].abspath(), self.outputs[0].abspath())
+
+
+@feature('copy_qt_bins')
+@after_method('apply_link')
+def copy_qt_bins(self):
+	v = self.env 
+	if v.CONFIGURATION != 'debug' and v.CONFIGURATION != 'release':
+		return
+	for m in QT5_MODULES:
+	 	pf = 'd' if v.CONFIGURATION == 'debug' else ''
+		f = v.cxxshlib_PATTERN % (m+pf)
+		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
+		if os.path.isfile(os.path.join(v.QT_HOST_BINS, f)):
+	 		self.create_task('copy_file', self.bld.root.find_node(os.path.join(v.QT_HOST_BINS, f)), output.make_node(f))
+
+@feature('copy_simpleitk_bins')
+@after_method('apply_link')
+def copy_sitk_bins(self):
+	v = self.env 
+	if v.CONFIGURATION != 'debug' and v.CONFIGURATION != 'release':
+		return
+
+	sitk_bin = os.path.join(v.SIMPLEITK_ROOT, 'SimpleITK-build', 'bin', v.CONFIGURATION)
+
+	modules = ['SimpleITKCommon-0.9', 'SimpleITKIO-0.9']
+	for m in modules:
+		f = v.cxxshlib_PATTERN % m
+		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
+		if os.path.isfile(os.path.join(sitk_bin, f)):
+	 		self.create_task('copy_file', self.bld.root.find_node(os.path.join(sitk_bin, f)), output.make_node(f))
+
+	 # ITK TODO: For now we assume it is located there
+	sitk_bin = os.path.join(v.SIMPLEITK_ROOT, 'ITK-build', 'bin', v.CONFIGURATION)
+
+	modules = [
+		"ITKCommon-4.8",
+		"ITKIOVTK-4.8",
+		"ITKIOStimulate-4.8",
+		"ITKIOSiemens-4.8",
+		"ITKIOPNG-4.8",
+		"ITKIONRRD-4.8",
+		"ITKIONIFTI-4.8",
+		"ITKIOMeta-4.8",
+		"ITKIOMesh-4.8",
+		"ITKIOLSM-4.8",
+		"ITKIOTIFF-4.8",
+		"ITKIOJPEG-4.8",
+		"ITKIOHDF5-4.8",
+		"ITKIOGIPL-4.8",
+		"ITKIOGE-4.8",
+		"ITKIOIPL-4.8",
+		"ITKIOBioRad-4.8",
+		"ITKIOBMP-4.8",
+		"ITKIOImageBase-4.8"
+	]
+	for m in modules:
+		f = v.cxxshlib_PATTERN % m
+		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
+		if os.path.isfile(os.path.join(sitk_bin, f)):
+	 		self.create_task('copy_file', self.bld.root.find_node(os.path.join(sitk_bin, f)), output.make_node(f))	 
+
+
 
 def options(opt):
 	opt.load('compiler_cxx python cuda qt5 msvs')
@@ -184,9 +251,11 @@ def configure(conf):
 			break
 		sitk_root = conf.root.find_node(p)
 	
-	print 'SimpleITK: %s' % sitk_root.abspath()
 	if sitk_root == None:
-		conf.fatal('Failed to determine location of for SimpleITK.')
+		conf.fatal('Failed to determine location of SimpleITK.')
+
+	print 'SimpleITK: %s' % sitk_root.abspath()
+	v.SIMPLEITK_ROOT = sitk_root.abspath()
 
 	# Release
 	sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Release').abspath()

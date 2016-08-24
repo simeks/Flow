@@ -26,7 +26,7 @@ def build(bld):
 		qt_lib = 'QT5_DEBUG'
 
 	bld.shlib(
-		features='pyembed',
+		features='pyembed copy_simpleitk_bins',
 		target='Core',
 		source=bld.find_files(['Core/**/*.cpp', 'Core/**/*.cu']), 
 		includes='. Core',
@@ -42,7 +42,7 @@ def build(bld):
 		install_path = '${PREFIX}',
 	)
 	bld.program(
-		features='qt5',
+		features='qt5 copy_qt_bins',
 		target='FlowLab',
 		source=bld.find_files(['FlowLab/**/*.cpp']) + ['FlowLab/resources.qrc'], 
 		moc=[
