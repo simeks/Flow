@@ -79,7 +79,47 @@ class vsnode_target(msvs.vsnode_target):
 				x.output_file = os.path.join(x.outdir, tsk.outputs[0].win32path().split(os.sep)[-1])
 				x.preprocessor_definitions = ';'.join(v.DEFINES)
 				x.includes_search_path = ';'.join(v.INCPATHS)	
-		
+
+class vsnode_build_all(msvs.vsnode_build_all):
+	"""
+	Fake target used to emulate the behaviour of "make all" (starting one process by target is slow)
+	This is the only alias enabled by default
+	"""
+	def __init__(self, ctx, node, name='build_all_projects'):
+		msvs.vsnode_build_all.__init__(self, ctx, node, name)
+		self.is_active = True
+
+	def get_build_command(self, props):
+		p = self.get_build_params(props)
+		return "%s build_%s_%s %s" % (p[0], platform_vs_to_waf(props.platform), configuration_vs_to_waf(props.configuration), p[1])
+	def get_clean_command(self, props):
+		p = self.get_build_params(props)
+		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
+		return "%s clean_%s %s" % (p[0], v, p[1])
+	def get_rebuild_command(self, props):
+		p = self.get_build_params(props)
+		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
+		return "%s clean_%s build_%s %s" % (p[0], v, v, p[1])
+
+class vsnode_install_all(msvs.vsnode_install_all):
+	"""
+	Fake target used to emulate the behaviour of "make install"
+	"""
+	def __init__(self, ctx, node, name='install_all_projects'):
+		msvs.vsnode_install_all.__init__(self, ctx, node, name)
+
+	def get_build_command(self, props):
+		p = self.get_build_params(props)
+		return "%s build_%s_%s %s" % (p[0], platform_vs_to_waf(props.platform), configuration_vs_to_waf(props.configuration), p[1])
+	def get_clean_command(self, props):
+		p = self.get_build_params(props)
+		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
+		return "%s clean_%s %s" % (p[0], v, p[1])
+	def get_rebuild_command(self, props):
+		p = self.get_build_params(props)
+		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
+		return "%s clean_%s build_%s %s" % (p[0], v, v, p[1])
+
 class msvs_2013(msvs.msvs_generator):
 	cmd = 'msvs2013'
 	numver = '13.00'
@@ -88,6 +128,8 @@ class msvs_2013(msvs.msvs_generator):
 	def init(self):
 		msvs.msvs_generator.init(self)
 		self.vsnode_target = vsnode_target
+		self.vsnode_build_all = vsnode_build_all
+		self.vsnode_install_all = vsnode_install_all
 
 class copy_file(Task.Task):
 	color = 'PINK'

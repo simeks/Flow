@@ -52,11 +52,11 @@ public:
     }
     const char* title() const OVERRIDE
     {
-        return "LoadImage";
+        return "Read";
     }
     const char* category() const OVERRIDE
     {
-        return "Image";
+        return "Image/IO";
     }
 
 };
@@ -94,11 +94,11 @@ public:
     }
     const char* title() const OVERRIDE
     {
-        return "SaveImage";
+        return "Write";
     }
     const char* category() const OVERRIDE
     {
-        return "Image";
+        return "Image/IO";
     }
 
 };
