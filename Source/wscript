@@ -42,7 +42,11 @@ def build(bld):
 		install_path = '${PREFIX}',
 	)
 
-	flags = '/SUBSYSTEM:CONSOLE' if bld.configuration == 'debug' else '/SUBSYSTEM:WINDOWS'
+	
+	if bld.cmd != 'msvs2013':
+		flags = '/SUBSYSTEM:CONSOLE' if bld.configuration == 'debug' else '/SUBSYSTEM:WINDOWS'
+	else:
+		flags = ''
 	bld.program(
 		features='qt5 copy_qt_bins',
 		target='FlowLab',

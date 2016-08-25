@@ -56,8 +56,52 @@ class vsnode_target(msvs.vsnode_target):
 		p = self.get_build_params(props)
 		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
 		return "%s clean_%s build_%s %s" % (p[0], v, v, p[1])
-	#def collect_source(self):
-		# TODO: likely to be required
+	def get_filter_name(self, node):
+		# This method is modified to conform to the changes in the dirs() method.
+		lst = msvs.diff(node, self.tg.path)
+		return '\\'.join(lst[1:]) or ''
+	def dirs(self):
+		"""
+		Get the list of parent folders of the source files (header files included)
+		for writing the filters
+		"""
+
+		# This version of the modified is a bit special as it avoids adding its own root dir to the list.
+		# The reason for this is that it's just annoying having the projects structured as:
+		# ProjectA
+		# - ProjectA
+		# -- FileA
+		# -- ... 
+
+		lst = []
+		def add(x):
+			if x.height() > self.tg.path.height() + 1 and x not in lst:
+				lst.append(x)
+				add(x.parent)
+		for x in self.source:
+			add(x.parent)
+		return lst
+	def collect_source(self):
+		tg = self.tg
+		source_files = tg.to_nodes(getattr(tg, 'source', []))
+
+		source = []
+		def add(x):
+			if x.height() > self.tg.path.height():
+				source.extend(x.ant_glob('(*.h|*.hpp|*.H|*.inl|*.c|*.cpp|*.cu)'))
+				add(x.parent)
+
+		source_paths = []
+		for x in source_files:
+			if x.parent not in source_paths:
+				source_paths.append(x.parent)
+
+		for x in source_paths:
+			add(x)
+
+		# remove duplicates
+		self.source.extend(list(set(source)))
+		self.source.sort(key=lambda x: x.win32path())
 	def collect_properties(self):
 		"""
 		Visual studio projects are associated with platforms and configurations (for building especially)
@@ -78,7 +122,7 @@ class vsnode_target(msvs.vsnode_target):
 			else:
 				x.output_file = os.path.join(x.outdir, tsk.outputs[0].win32path().split(os.sep)[-1])
 				x.preprocessor_definitions = ';'.join(v.DEFINES)
-				x.includes_search_path = ';'.join(v.INCPATHS)	
+				x.includes_search_path = ';'.join(self.tg.env.INCPATHS)	
 
 class vsnode_build_all(msvs.vsnode_build_all):
 	"""
