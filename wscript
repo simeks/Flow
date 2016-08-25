@@ -48,6 +48,14 @@ class vsnode_target(msvs.vsnode_target):
 	def get_build_command(self, props):
 		p = self.get_build_params(props)
 		return "%s build_%s_%s %s" % (p[0], platform_vs_to_waf(props.platform), configuration_vs_to_waf(props.configuration), p[1])
+	def get_clean_command(self, props):
+		p = self.get_build_params(props)
+		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
+		return "%s clean_%s %s" % (p[0], v, p[1])
+	def get_rebuild_command(self, props):
+		p = self.get_build_params(props)
+		v = platform_vs_to_waf(props.platform) + '_' + configuration_vs_to_waf(props.configuration)
+		return "%s clean_%s build_%s %s" % (p[0], v, v, p[1])
 	#def collect_source(self):
 		# TODO: likely to be required
 	def collect_properties(self):
