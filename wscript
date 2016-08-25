@@ -190,13 +190,14 @@ def configure_msvc_x64_common(conf):
 
 def configure_msvc_x64_debug(conf):
 	configure_msvc_x64_common(conf)
-	flags = ['/MDd', '/Od']
+	flags = ['/MDd', '/Od', '/Zi']
 
 	v = conf.env
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
 	v.DEFINES += ['_DEBUG', 'FLOW_BUILD_DEBUG']
 	v.CUDAFLAGS += ['-G', '-g', '-Xcompiler="'+' '.join(v.CXXFLAGS)+'"']
+	v.LINKFLAGS += ['/DEBUG']
 
 def configure_msvc_x64_release(conf):
 	configure_msvc_x64_common(conf)
