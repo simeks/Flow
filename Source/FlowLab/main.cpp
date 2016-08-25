@@ -6,7 +6,7 @@
 
 #include <Core/Core.h>
 
-#if DEBUG
+#if FLOW_BUILD_DEBUG
 int main(int /*argc*/, char ** /*argv*/)
 #else
 int WinMain(HINSTANCE /*hInInstance*/, HINSTANCE /*hPrevInstance*/, char*, int /*nCmdShow*/)

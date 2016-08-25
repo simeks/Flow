@@ -41,6 +41,8 @@ def build(bld):
 		use='Core',
 		install_path = '${PREFIX}',
 	)
+
+	flags = '/SUBSYSTEM:CONSOLE' if bld.configuration == 'debug' else '/SUBSYSTEM:WINDOWS'
 	bld.program(
 		features='qt5 copy_qt_bins',
 		target='FlowLab',
@@ -57,6 +59,7 @@ def build(bld):
 			],
 		includes='. .. FlowCLI',
 		use='Core ' + qt_lib,
+		linkflags=flags,
 		install_path = '${PREFIX}',
 	)	
 	bld.recurse(SUBFOLDERS, mandatory=False)

@@ -237,7 +237,7 @@ def configure_msvc_x64_debug(conf):
 	v = conf.env
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
-	v.DEFINES += ['_DEBUG', 'FLOW_BUILD_DEBUG']
+	v.DEFINES += ['DEBUG', '_DEBUG', 'FLOW_BUILD_DEBUG']
 	v.CUDAFLAGS += ['-G', '-g', '-Xcompiler="'+' '.join(v.CXXFLAGS)+'"']
 	v.LINKFLAGS += ['/DEBUG']
 
