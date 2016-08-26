@@ -33,17 +33,20 @@ class FunctionNode(flow.Node):
         if self.func == None:
             return
 
-        args = []
+        kwargs = {}
         for a in self.args:
             p = ctx.read_pin(a)
             if p == None:
                 print '[Warning] Pin \'%s\' not set.' % a # TODO: Better msg/warning/error
-            args.append(p)
+            kwargs[a] = p
 
-        result = self.func(*args)
-        if type(result) == flow.Image and type(args[0]) == flow.Image:
-            result.set_origin(args[0].origin())
-            result.set_spacing(args[0].spacing())
+        result = self.func(**kwargs)
+
+        # If our first argument and the result is an image, copy metadata
+        in_img = kwargs[self.args[0]]
+        if type(result) == flow.Image and type(in_img) == flow.Image:
+            result.set_origin(in_img.origin())
+            result.set_spacing(in_img.spacing())
         ctx.write_pin('Out', result)   
 
 
@@ -55,15 +58,17 @@ def node_func(title, category = ''):
 
 def numpy_func(title, category = ''):
     def dec(fn):
-        def dec2(*args):
-            args2 = []
-            for a in args:
-                if type(a) == flow.Image:
-                    args2.append(a.to_array())
+        def dec2(**kwargs):
+            kwargs2 = {}
+            for k, v in kwargs.iteritems():
+                if type(v) == flow.Image:
+                    kwargs2[k] = v.to_array()
                 else:
-                    args2.append(a)
-            arr = fn(*args2)
-            return flow.Image(arr, str(arr.dtype)) # TODO: Conversion dtype -> pixel_type
+                    kwargs2[k] = v
+            arr = fn(**kwargs2)
+            if type(arr) == np.array:
+                return flow.Image(arr, str(arr.dtype))
+            return arr
 
         dec2.__name__ = fn.__name__
         dec2.__module__ = fn.__module__
@@ -71,31 +76,3 @@ def numpy_func(title, category = ''):
         flow.install_template(FunctionNode(func=dec2, args=args, title=title, category=category))
         return fn
     return dec
-
-#     class dec(object):
-#     def __init__(self, title, category):
-#         self.title = title
-#         self.category = category
-#         self.fn = fn
-#         self.args = inspect.getargspec(fn).args
-#         self.name = fn.__name__
-
-#     def __call__(self, *args):
-#         return self.fn(*args)
-
-# class numpy_func(node_func):
-#     def __init__(self, fn):
-#         funcs.append(fn.__name__)
-#         super(numpy_func, self).__init__(fn)
-
-#     def __call__(self, *args):
-#         args2 = []
-#         for a in args:
-#             if type(a) == flow.Image:
-#                 args2.append(a.to_array())
-#             else:
-#                 args2.append(a)
-#         arr = self.fn(*args2)
-#         return flow.Image(arr, str(arr.dtype)) # TODO: Conversion dtype -> pixel_type
-
-
