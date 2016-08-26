@@ -166,6 +166,8 @@ bool CommandLineApp::load_graph(const std::string& file)
         std::string node_class = node_obj["node_class"].as_string();
 
         FlowNode* tpl = FlowSystem::get().node_template(node_class);
+        if (!tpl)
+            FATAL_ERROR("Failed to find node: '%s'.", node_class.c_str());
         node.reset((FlowNode*)tpl->clone());
 
         Guid node_id = guid::from_string(node_obj["id"].as_string());

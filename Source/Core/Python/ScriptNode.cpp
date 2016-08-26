@@ -95,20 +95,28 @@ void ScriptNode::run(FlowContext& context)
 
 std::string ScriptNode::node_class() const
 {
-    PyObject* type = PyObject_Type(_py_object);
-    PyObject* module_name = PyObject_GetAttrString(type, "__module__");
-
-    PyObject* class_name = nullptr;
-    if (PyObject_HasAttrString(_py_object, "class_name"))
-        class_name = PyObject_GetAttrString(_py_object, "class_name");
-    else
-        class_name = PyObject_GetAttrString(type, "__name__");
-
     std::string node_class = get_class()->name();
     node_class += ":";
-    node_class += PyString_AsString(module_name);
-    node_class += ".";
-    node_class += PyString_AsString(class_name);
+
+    if (PyObject_HasAttrString(_py_object, "class_name"))
+    {
+        node_class += PyString_AsString(PyObject_GetAttrString(_py_object, "class_name"));
+    }
+    else
+    {
+        PyObject* type = PyObject_Type(_py_object);
+        PyObject* module_name = PyObject_GetAttrString(type, "__module__");
+
+        PyObject* class_name = nullptr;
+        if (PyObject_HasAttrString(_py_object, "class_name"))
+            class_name = PyObject_GetAttrString(_py_object, "class_name");
+        else
+            class_name = PyObject_GetAttrString(type, "__name__");
+
+        node_class += PyString_AsString(module_name);
+        node_class += ".";
+        node_class += PyString_AsString(class_name);
+    }
 
     return node_class;
 }

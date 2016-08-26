@@ -58,16 +58,19 @@ void ScriptManager::load_modules()
         PyObject* m = PyImport_ImportModule(path.c_str());
         if (m)
         {
-            PyObject* func = PyObject_GetAttrString(m, "install_module");
-            if (func)
+            if (PyObject_HasAttrString(m, "install_module"))
             {
-                if (!PyObject_CallObject(func, nullptr))
+                PyObject* func = PyObject_GetAttrString(m, "install_module");
+                if (func)
                 {
-                    PyErr_Print();
-                }
-                else
-                {
-                    console::print("Python: Module '%s' installed\n", path.c_str());
+                    if (!PyObject_CallObject(func, nullptr))
+                    {
+                        PyErr_Print();
+                    }
+                    else
+                    {
+                        console::print("Python: Module '%s' installed\n", path.c_str());
+                    }
                 }
             }
         }
