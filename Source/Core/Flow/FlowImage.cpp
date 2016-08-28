@@ -141,7 +141,7 @@ static PyObject* py_FlowImage_set_origin_fn(PyObject* self, PyObject* args)
                         return nullptr;
                     }
                 }
-                object->set_spacing(origin);
+                object->set_origin(origin);
             }
             else
             {

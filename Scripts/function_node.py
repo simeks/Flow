@@ -38,7 +38,8 @@ class FunctionNode(flow.Node):
             p = ctx.read_pin(a)
             if p == None:
                 print '[Warning] Pin \'%s\' not set.' % a # TODO: Better msg/warning/error
-            kwargs[a] = p
+            else:
+                kwargs[a] = p
 
         result = self.func(**kwargs)
 
@@ -47,6 +48,7 @@ class FunctionNode(flow.Node):
         if type(result) == flow.Image and type(in_img) == flow.Image:
             result.set_origin(in_img.origin())
             result.set_spacing(in_img.spacing())
+
         ctx.write_pin('Out', result)   
 
 
@@ -66,7 +68,7 @@ def numpy_func(title, category = ''):
                 else:
                     kwargs2[k] = v
             arr = fn(**kwargs2)
-            if type(arr) == np.array:
+            if type(arr) == np.array or type(arr) == np.ndarray:
                 return flow.Image(arr, str(arr.dtype))
             return arr
 
