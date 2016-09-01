@@ -244,7 +244,8 @@ def copy_sitk_bins(self):
 
 def options(opt):
 	opt.load('compiler_cxx python cuda qt5 msvs')
-	opt.add_option('--simpleitk', dest='simpleitk_root', action='store', default=False, help='Path to SimpleITK.')
+	opt.add_option('--simpleitk', dest='simpleitk_root', action='store', help='Path to SimpleITK.')
+	opt.add_option('--no-cuda', dest='no_cuda', action='store_true', default=False)
 
 def configure_msvc_x64_common(conf):
 	flags = [
@@ -295,10 +296,39 @@ def configure_msvc_x64_release(conf):
 	v.DEFINES += ['NDEBUG', 'FLOW_BUILD_RELEASE']
 	v.CUDAFLAGS += ['-Xcompiler="'+' '.join(v.CXXFLAGS)+'"']
 
-def configure(conf):
-	conf.load('compiler_cxx python cuda msvs')
+
+def configure_gcc_x64_common(conf):
+	flags = [
+		'-Werror', '-Wall',
+		]
 
 	v = conf.env
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
+
+	v.DEFINES += [
+		'FLOW_PLATFORM_LINUX', 
+		'_UNICODE', 
+		'UNICODE',
+	]
+def configure_gcc_x64_release(conf):
+	configure_gcc_x64_common(conf)
+	flags = ['-O2']
+
+	v = conf.env
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
+	v.DEFINES += ['NDEBUG', 'FLOW_BUILD_RELEASE']
+
+
+def configure(conf):
+	conf.load('compiler_cxx python msvs')
+
+	v = conf.env
+
+	if conf.options.no_cuda != True:
+		v.USE_CUDA = True
+		conf.load('cuda')
 
 	# Qt5
 	conf.load('qt5')
@@ -354,49 +384,86 @@ def configure(conf):
 	print 'SimpleITK: %s' % sitk_root.abspath()
 	v.SIMPLEITK_ROOT = sitk_root.abspath()
 
-	# Release
-	sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Release').abspath()
-	sitk_includes = sitk_root.find_node('include/SimpleITK-0.9').abspath()
-	conf.check_cxx(
-		header_name='sitkCommon.h', 
-		lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
-		libpath=sitk_libpath, 
-		includes=sitk_includes, 
-		uselib_store='SIMPLEITK', 
-		mandatory=True)
+	if Utils.unversioned_sys_platform() == 'win32':
+		# Release
+		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Release').abspath()
+		sitk_includes = sitk_root.find_node('include/SimpleITK-0.9').abspath()
+		conf.check_cxx(
+			header_name='sitkCommon.h', 
+			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			libpath=sitk_libpath, 
+			includes=sitk_includes, 
+			uselib_store='SIMPLEITK', 
+			mandatory=True)
 
-	# Debug
-	sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Debug').abspath()
-	conf.check_cxx(
-		header_name='sitkCommon.h', 
-		lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
-		libpath=sitk_libpath, 
-		includes=sitk_includes, 
-		uselib_store='SIMPLEITK_DEBUG', 
-		mandatory=True)
+		# Debug
+		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Debug').abspath()
+		conf.check_cxx(
+			header_name='sitkCommon.h', 
+			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			libpath=sitk_libpath, 
+			includes=sitk_includes, 
+			uselib_store='SIMPLEITK_DEBUG', 
+			mandatory=True)
+	else:
+		# Release
+		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/').abspath()
+		sitk_includes = sitk_root.find_node('include/SimpleITK-0.9').abspath()
+		conf.check_cxx(
+			header_name='sitkCommon.h', 
+			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			libpath=sitk_libpath, 
+			includes=sitk_includes, 
+			uselib_store='SIMPLEITK', 
+			mandatory=True)
+
+		# Debug TODO: Linux debug libs
+		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/').abspath()
+		conf.check_cxx(
+			header_name='sitkCommon.h', 
+			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			libpath=sitk_libpath, 
+			includes=sitk_includes, 
+			uselib_store='SIMPLEITK_DEBUG', 
+			mandatory=True)
+		
 
 	# sqlite
-	sqlite3_root = conf.path.find_node('External/sqlite').abspath()
-	sqlite3_libpath = [sqlite3_root]
-	sqlite3_includes = [sqlite3_root]
-	conf.check_cxx(
-		header_name='sqlite3.h', 
-		lib='sqlite3', 
-		libpath=sqlite3_libpath, 
-		includes=sqlite3_includes, 
-		uselib_store='SQLITE3',
-		mandatory=True)
+
+	if Utils.unversioned_sys_platform() == 'win32':
+		sqlite3_root = conf.path.find_node('External/sqlite').abspath()
+		sqlite3_libpath = [sqlite3_root]
+		sqlite3_includes = [sqlite3_root]
+		conf.check_cxx(
+			header_name='sqlite3.h', 
+			lib='sqlite3', 
+			libpath=sqlite3_libpath, 
+			includes=sqlite3_includes, 
+			uselib_store='SQLITE3',
+			mandatory=True)
+	else:
+		conf.check_cxx(
+			header_name='sqlite3.h', 
+			lib='sqlite3', 
+			uselib_store='SQLITE3',
+			mandatory=True)
+
+	# Platform specific setup
 
 	variant_configure = {
 		'win64_debug': configure_msvc_x64_debug,
 		'win64_release': configure_msvc_x64_release,
+		'linux_x64_gcc_release': configure_gcc_x64_release,
 	}
 
 	for p in supported_platforms():
 		for c in CONFIGURATIONS:
 			v = p + '_' + c
 			conf.setenv(v, env=conf.env.derive().detach()) # Make sure to make a deep copy of base env
-			variant_configure[v](conf)
+			if v in variant_configure:			
+				variant_configure[v](conf)
+			else:			
+				print 'No configuration set for variant %s' % v
 			conf.setenv('')
 
 	conf.recurse(SUBFOLDERS, mandatory=False)
