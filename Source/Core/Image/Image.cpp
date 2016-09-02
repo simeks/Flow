@@ -55,7 +55,7 @@ void Image::create(const std::vector<uint32_t>& size, int type, const uint8_t* d
     int ndims = (int)size.size();
     Vec3i vsize;
     int i = 0;
-    for (; i < size.size(); ++i)
+    for (; i < (int)size.size(); ++i)
         vsize[i] = size[i];
     for (; i < 3; ++i)
         vsize[i] = 1;

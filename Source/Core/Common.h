@@ -6,10 +6,13 @@
 #include <iostream>
 #include <algorithm>
 #include <stdint.h>
+#include <stddef.h>
 #include <errno.h>
 #include <memory>
 #include <type_traits>
 #include <cstdarg>
+#include <stdio.h>
+#include <string.h>
 
 #include <vector>
 #include <map>

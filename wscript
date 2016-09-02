@@ -299,10 +299,14 @@ def configure_msvc_x64_release(conf):
 
 def configure_gcc_x64_common(conf):
 	flags = [
-		'-Werror', '-Wall',
+		'-m64', '-Werror', '-Wall', '-std=c++11', '-fopenmp',
+		'-Wno-unused-variable',
+		'-Wno-switch',
 		]
 
 	v = conf.env
+	v.CC = 'gcc'
+	v.CXX = 'g++'
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
 
@@ -313,6 +317,33 @@ def configure_gcc_x64_common(conf):
 	]
 def configure_gcc_x64_release(conf):
 	configure_gcc_x64_common(conf)
+	flags = ['-O2']
+
+	v = conf.env
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
+	v.DEFINES += ['NDEBUG', 'FLOW_BUILD_RELEASE']
+
+def configure_clang_x64_common(conf):
+	flags = [
+		'-m64', '-Werror', '-Wall', '-std=c++11', '-fopenmp',
+		'-Wno-inconsistent-missing-override',
+		'-Wno-switch',
+		]
+
+	v = conf.env
+	v.CC = 'clang'
+	v.CXX = 'clang++'
+	v.CFLAGS += flags
+	v.CXXFLAGS += flags
+
+	v.DEFINES += [
+		'FLOW_PLATFORM_LINUX', 
+		'_UNICODE', 
+		'UNICODE',
+	]
+def configure_clang_x64_release(conf):
+	configure_clang_x64_common(conf)
 	flags = ['-O2']
 
 	v = conf.env
@@ -407,7 +438,8 @@ def configure(conf):
 			mandatory=True)
 	else:
 		# Release
-		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/').abspath()
+		sitk_libpath = [sitk_root.find_node('SimpleITK-build/lib/').abspath()]
+		sitk_libpath += [sitk_root.find_node('ITK-build/lib/').abspath()]
 		sitk_includes = sitk_root.find_node('include/SimpleITK-0.9').abspath()
 		conf.check_cxx(
 			header_name='sitkCommon.h', 
@@ -454,6 +486,7 @@ def configure(conf):
 		'win64_debug': configure_msvc_x64_debug,
 		'win64_release': configure_msvc_x64_release,
 		'linux_x64_gcc_release': configure_gcc_x64_release,
+		'linux_x64_clang_release': configure_clang_x64_release,
 	}
 
 	for p in supported_platforms():

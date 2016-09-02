@@ -50,7 +50,7 @@ T GraphCut<T>::minimize()
 template<typename T>
 int GraphCut<T>::get_var(const Vec3i& p)
 {
-    int index = get_index(x, y, z);
+    int index = get_index(p.x, p.y, p.z);
     return _e.get_var(index);
 }
 template<typename T>

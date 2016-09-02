@@ -17,10 +17,13 @@ def build(bld):
 		use='Core SQLITE3',
 		install_path = '${PREFIX}/Plugins',
 	)
+	use_cuda = ''
+	if v.USE_CUDA:
+		use_cuda += ' CUDA CUDART'
 	bld.shlib(
 		target='Plugin_Registration',
 		source=bld.find_files(['Registration/**/*.cpp', 'Registration/**/*.cu']), 
 		includes='. .. Registration ../../External/gco-v3.0',
-		use='Core CUDA CUDART',
+		use='Core' + use_cuda,
 		install_path = '${PREFIX}/Plugins',
 	)

@@ -36,10 +36,9 @@ namespace assert_util
             exit(0);
         };
 
-#elif FLOW_PLATFORM_MACOSX
+#else
         return RET_DEBUGGER; // TODO:
 #endif
-
 
     }
 

@@ -20,7 +20,7 @@ static TImage normalize_image(const TImage& src, double min, double max)
         {
             for (int x = 0; x < dims.x; ++x)
             {
-                res(x, y, z) = TImage::TPixelType((max - min) * (src(x, y, z) - in_min) / (in_max - in_min) + min);
+                res(x, y, z) = typename TImage::TPixelType((max - min) * (src(x, y, z) - in_min) / (in_max - in_min) + min);
             }
         }
     }

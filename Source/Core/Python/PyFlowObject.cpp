@@ -63,7 +63,7 @@ static PyTypeObject py_base_object_type = {
     PyObject_HEAD_INIT(NULL)
     0,                         /*ob_size*/
     "flow.BaseObject",             /*tp_name*/
-    py_flow_object::type_basicsize(),             /*tp_basicsize*/
+    (Py_ssize_t)py_flow_object::type_basicsize(),             /*tp_basicsize*/
     0,                         /*tp_itemsize*/
     (destructor)py_flow_object::type_dealloc, /*tp_dealloc*/
     0,                         /*tp_print*/

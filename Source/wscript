@@ -13,43 +13,54 @@ def find_files(bld, p):
 			excl.append('**/windows/*')
 		if v.PLATFORM != 'macosx':
 			excl.append('**/macosx/*')
+		if v.PLATFORM != 'linux_x64_gcc':
+			excl.append('**/linux/*')
+
+	if 'USE_CUDA' not in bld.env or bld.env.USE_CUDA == False:
+		excl += ['**/*.cu']
 
 	return bld.path.ant_glob(p, excl=excl)
 
 def build(bld):
 	v = bld.env
 
-	simpleitk_lib = 'SIMPLEITK'
+	use = 'NUMPY'
+
 	qt_lib = 'QT5'
 	if bld.cmd != 'msvs2013' and bld.configuration == 'debug':
-		simpleitk_lib = 'SIMPLEITK_DEBUG'
+		use += ' SIMPLEITK_DEBUG'
 		qt_lib = 'QT5_DEBUG'
+	else:
+		use += ' SIMPLEITK'
+
+	if v.USE_CUDA:
+		use += ' CUDA CUDART'
 
 	bld.shlib(
 		features='pyembed copy_simpleitk_bins',
-		target='Core',
+		target='core',
 		source=bld.find_files(['Core/**/*.cpp', 'Core/**/*.cu']), 
 		includes='. Core',
 		defines='FLOW_CORE_EXPORTS',
-		use='NUMPY CUDA CUDART ' + simpleitk_lib,
+		use=use,
 		install_path = '${PREFIX}',
 	)
 	bld.program(
-		target='FlowCLI',
+		target='flow_cli',
 		source=bld.find_files(['FlowCLI/**/*.cpp']), 
 		includes='. FlowCLI',
-		use='Core',
+		use='core',
 		install_path = '${PREFIX}',
 	)
 
 	
-	if bld.cmd != 'msvs2013':
+	if bld.platform == 'win64' and bld.cmd != 'msvs2013':
 		flags = '/SUBSYSTEM:CONSOLE' if bld.configuration == 'debug' else '/SUBSYSTEM:WINDOWS'
 	else:
 		flags = ''
 	bld.program(
 		features='qt5 copy_qt_bins',
-		target='FlowLab',
+		target='flow_lab',
 		source=bld.find_files(['FlowLab/**/*.cpp']) + ['FlowLab/resources.qrc'], 
 		moc=[
 			'FlowLab/MainWindow.h', 
@@ -62,7 +73,7 @@ def build(bld):
 			'FlowLab/ConsoleWidget.h'
 			],
 		includes='. .. FlowCLI',
-		use='Core ' + qt_lib,
+		use='core ' + qt_lib,
 		linkflags=flags,
 		install_path = '${PREFIX}',
 	)	

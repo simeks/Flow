@@ -27,17 +27,17 @@ static TImage gaussian_filter_3d(const TImage& img, double sigma)
         {
             for (int x = 0; x < dims.x; x++)
             {
-                TImage::TPixelType value(0);
+                typename TImage::TPixelType value(0);
                 double norm = 0;
                 for (int t = -size; t < size + 1; t++)
                 {
                     double c = exp(factor*(t*sx)*(t*sx));
 
                     int sx = std::min(std::max(x + t, 0), dims.x - 1);
-                    value += TImage::TPixelType(c*result(sx, y, z));
+                    value += typename TImage::TPixelType(c*result(sx, y, z));
                     norm += c;
                 }
-                result(x, y, z) = TImage::TPixelType(value / norm);
+                result(x, y, z) = typename TImage::TPixelType(value / norm);
             }
         }
     }
@@ -51,17 +51,17 @@ static TImage gaussian_filter_3d(const TImage& img, double sigma)
         {
             for (int y = 0; y < dims.y; y++)
             {
-                TImage::TPixelType value(0);
+                typename TImage::TPixelType value(0);
                 double norm = 0;
                 for (int t = -size; t < size + 1; t++)
                 {
                     double c = exp(factor*(t*sx)*(t*sx));
 
                     int sy = std::min(std::max(y + t, 0), dims.y - 1);
-                    value += TImage::TPixelType(c*result(x, sy, z));
+                    value += typename TImage::TPixelType(c*result(x, sy, z));
                     norm += c;
                 }
-                result(x, y, z) = TImage::TPixelType(value / norm);
+                result(x, y, z) = typename TImage::TPixelType(value / norm);
             }
         }
     }
@@ -75,17 +75,17 @@ static TImage gaussian_filter_3d(const TImage& img, double sigma)
         {
             for (int z = 0; z < dims.z; z++)
             {
-                TImage::TPixelType value(0);
+                typename TImage::TPixelType value(0);
                 double norm = 0;
                 for (int t = -size; t < size + 1; t++)
                 {
                     double c = exp(factor*(t*sx)*(t*sx));
 
                     int sz = std::min(std::max(z + t, 0), dims.z - 1);
-                    value += TImage::TPixelType(c*result(x, y, sz));
+                    value += typename TImage::TPixelType(c*result(x, y, sz));
                     norm += c;
                 }
-                result(x, y, z) = TImage::TPixelType(value / norm);
+                result(x, y, z) = typename TImage::TPixelType(value / norm);
             }
         }
     }
@@ -111,17 +111,17 @@ static TImage gaussian_filter_2d(const TImage& img, double sigma)
     {
         for (int x = 0; x < dims.x; x++)
         {
-            TImage::TPixelType value(0);
+            typename TImage::TPixelType value(0);
             double norm = 0;
             for (int t = -size; t < size + 1; t++)
             {
                 double c = exp(factor*(t*sx)*(t*sx));
 
                 int sx = std::min(std::max(x + t, 0), dims.x - 1);
-                value += TImage::TPixelType(c*result(sx, y));
+                value += typename TImage::TPixelType(c*result(sx, y));
                 norm += c;
             }
-            result(x, y) = TImage::TPixelType(value / norm);
+            result(x, y) = typename TImage::TPixelType(value / norm);
         }
     }
 
@@ -132,17 +132,17 @@ static TImage gaussian_filter_2d(const TImage& img, double sigma)
     {
         for (int y = 0; y < dims.y; y++)
         {
-            TImage::TPixelType value(0);
+            typename TImage::TPixelType value(0);
             double norm = 0;
             for (int t = -size; t < size + 1; t++)
             {
                 double c = exp(factor*(t*sx)*(t*sx));
 
                 int sy = std::min(std::max(y + t, 0), dims.y - 1);
-                value += TImage::TPixelType(c*result(x, sy));
+                value += typename TImage::TPixelType(c*result(x, sy));
                 norm += c;
             }
-            result(x, y) = TImage::TPixelType(value / norm);
+            result(x, y) = typename TImage::TPixelType(value / norm);
         }
     }
 

@@ -6,7 +6,18 @@
 #include "ITK.h"
 
 #include <fstream>
+
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
+#endif
+
 #include <SimpleITK.h>
+
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 
 namespace sitk = itk::simple;
 
@@ -16,7 +27,7 @@ namespace
     void vector_to_vec3i(Vec3<T1>& v_out, const std::vector<T2>& v_in)
     {
         assert(v_in.size() <= 3);
-        for (int i = 0; i < v_in.size(); ++i)
+        for (int i = 0; i < int(v_in.size()); ++i)
             v_out[i] = v_in[i];
     }
 }

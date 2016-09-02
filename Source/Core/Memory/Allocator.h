@@ -3,7 +3,7 @@
 #ifndef __CORE_ALLOCATOR_H__
 #define __CORE_ALLOCATOR_H__
 
-#include "NonCopyable.h"
+#include <Core/NonCopyable.h>
 
 /// @brief Interface for allocators
 class Allocator : public NonCopyable

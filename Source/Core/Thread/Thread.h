@@ -63,7 +63,7 @@ public:
     bool join(uint32_t time_out = 0);
 
     /// @brief Is the thread running?
-    bool is_running() const { return (_thread_handle != NULL); }
+    bool is_running() const { return _is_running; }
 
 protected:
     struct ThreadPayload
@@ -79,6 +79,8 @@ protected:
 #else
     pthread_t _thread_handle;
 #endif
+
+    bool _is_running;
 
     ThreadPayload _thread_payload;
     Runnable* _runnable;

@@ -49,13 +49,13 @@ void BlockChangeFlags::set_block(const Vec3i& block_p, bool changed, bool shift)
 uint8_t BlockChangeFlags::flag(const Vec3i& subblock_p) const
 {
     int i = subblock_p.z * _block_count.x * _block_count.y + subblock_p.y * _block_count.x + subblock_p.x;
-    if (i > 0 && i < _flags.size())
+    if (i > 0 && i < int(_flags.size()))
         return _flags[subblock_p.z * _block_count.x * _block_count.y + subblock_p.y * _block_count.x + subblock_p.x];
     return 0;
 }
 void BlockChangeFlags::set(const Vec3i& subblock_p, uint8_t flags)
 {
     int i = subblock_p.z * _block_count.x * _block_count.y + subblock_p.y * _block_count.x + subblock_p.x;
-    if (i > 0 && i < _flags.size())
+    if (i > 0 && i < int(_flags.size()))
         _flags[subblock_p.z * _block_count.x * _block_count.y + subblock_p.y * _block_count.x + subblock_p.x] = flags;
 }
