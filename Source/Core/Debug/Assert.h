@@ -44,8 +44,8 @@ namespace assert_util
 
 #else
 
-#define assert( _exp )              ((void)0)
-#define assert_msg( _exp, _msg )    ((void)0)
+#define assert( _exp )              ((void)(_exp))
+#define assert_msg( _exp, _msg )    ((void)(_exp))
 #define verify( _exp)               (_exp)
 
 

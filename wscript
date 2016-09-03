@@ -19,6 +19,31 @@ from waflib.TaskGen import extension, before_method, after_method, feature
 from waflib.Configure import conf
 
 QT5_MODULES = ['Qt5Core', 'Qt5Gui', 'Qt5Widgets']
+SIMPLEITK_MODULES = [
+	'SimpleITKCommon-0.9',
+	'SimpleITKIO-0.9',
+]
+ITK_MODULES = [
+	'ITKIOVTK-4.8',
+	'ITKCommon-4.8',
+	'ITKIOBioRad-4.8',
+	'ITKIOBMP-4.8',
+	'ITKIOGE-4.8',
+	'ITKIOGIPL-4.8',
+	'ITKIOHDF5-4.8',
+	'ITKIOImageBase-4.8',
+	'ITKIOIPL-4.8',
+	'ITKIOJPEG-4.8',
+	'ITKIOLSM-4.8',
+	'ITKIOMesh-4.8',
+	'ITKIOMeta-4.8',
+	'ITKIONIFTI-4.8',
+	'ITKIONRRD-4.8',
+	'ITKIOPNG-4.8',
+	'ITKIOSiemens-4.8',
+	'ITKIOStimulate-4.8',
+	'ITKIOTIFF-4.8',
+]
 
 
 def supported_platforms():
@@ -203,8 +228,7 @@ def copy_sitk_bins(self):
 
 	sitk_bin = os.path.join(v.SIMPLEITK_ROOT, 'SimpleITK-build', 'bin', v.CONFIGURATION)
 
-	modules = ['SimpleITKCommon-0.9', 'SimpleITKIO-0.9']
-	for m in modules:
+	for m in SIMPLEITK_MODULES:
 		f = v.cxxshlib_PATTERN % m
 		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
 		if os.path.isfile(os.path.join(sitk_bin, f)):
@@ -213,28 +237,7 @@ def copy_sitk_bins(self):
 	 # ITK TODO: For now we assume it is located there
 	sitk_bin = os.path.join(v.SIMPLEITK_ROOT, 'ITK-build', 'bin', v.CONFIGURATION)
 
-	modules = [
-		"ITKCommon-4.8",
-		"ITKIOVTK-4.8",
-		"ITKIOStimulate-4.8",
-		"ITKIOSiemens-4.8",
-		"ITKIOPNG-4.8",
-		"ITKIONRRD-4.8",
-		"ITKIONIFTI-4.8",
-		"ITKIOMeta-4.8",
-		"ITKIOMesh-4.8",
-		"ITKIOLSM-4.8",
-		"ITKIOTIFF-4.8",
-		"ITKIOJPEG-4.8",
-		"ITKIOHDF5-4.8",
-		"ITKIOGIPL-4.8",
-		"ITKIOGE-4.8",
-		"ITKIOIPL-4.8",
-		"ITKIOBioRad-4.8",
-		"ITKIOBMP-4.8",
-		"ITKIOImageBase-4.8"
-	]
-	for m in modules:
+	for m in ITK_MODULES:
 		f = v.cxxshlib_PATTERN % m
 		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
 		if os.path.isfile(os.path.join(sitk_bin, f)):
@@ -309,6 +312,7 @@ def configure_gcc_x64_common(conf):
 	v.CXX = 'g++'
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
+	v.LINKFLAGS += [ '-fopenmp' ]
 
 	v.DEFINES += [
 		'FLOW_PLATFORM_LINUX', 
@@ -336,6 +340,7 @@ def configure_clang_x64_common(conf):
 	v.CXX = 'clang++'
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
+	v.LINKFLAGS += [ '-fopenmp' ]
 
 	v.DEFINES += [
 		'FLOW_PLATFORM_LINUX', 
@@ -383,6 +388,8 @@ def configure(conf):
 		v.LIBPATH_QT5 += v['LIBPATH_%s' % m.upper()]
 		v.LIBPATH_QT5_DEBUG += v['LIBPATH_%s_DEBUG' % m.upper()]
 
+	v.RPATH += v.LIBPATH_QT5
+
 	# Python
 	conf.check_python_version()
 	conf.check_python_headers('pyembed')
@@ -417,21 +424,23 @@ def configure(conf):
 
 	if Utils.unversioned_sys_platform() == 'win32':
 		# Release
-		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Release').abspath()
+		sitk_libpath = [sitk_root.find_node('SimpleITK-build/lib/Release').abspath()]
+		sitk_libpath += [sitk_root.find_node('ITK-build/lib/Release').abspath()]
 		sitk_includes = sitk_root.find_node('include/SimpleITK-0.9').abspath()
 		conf.check_cxx(
 			header_name='sitkCommon.h', 
-			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			lib=SIMPLEITK_MODULES + ITK_MODULES, 
 			libpath=sitk_libpath, 
 			includes=sitk_includes, 
 			uselib_store='SIMPLEITK', 
 			mandatory=True)
 
 		# Debug
-		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/Debug').abspath()
+		sitk_libpath = [sitk_root.find_node('SimpleITK-build/lib/Debug').abspath()]
+		sitk_libpath += [sitk_root.find_node('ITK-build/lib/Debug').abspath()]
 		conf.check_cxx(
 			header_name='sitkCommon.h', 
-			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			lib=SIMPLEITK_MODULES + ITK_MODULES, 
 			libpath=sitk_libpath, 
 			includes=sitk_includes, 
 			uselib_store='SIMPLEITK_DEBUG', 
@@ -443,22 +452,26 @@ def configure(conf):
 		sitk_includes = sitk_root.find_node('include/SimpleITK-0.9').abspath()
 		conf.check_cxx(
 			header_name='sitkCommon.h', 
-			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			lib=SIMPLEITK_MODULES + ITK_MODULES, 
 			libpath=sitk_libpath, 
 			includes=sitk_includes, 
 			uselib_store='SIMPLEITK', 
 			mandatory=True)
 
+
 		# Debug TODO: Linux debug libs
-		sitk_libpath = sitk_root.find_node('SimpleITK-build/lib/').abspath()
+		sitk_libpath = [sitk_root.find_node('SimpleITK-build/lib/').abspath()]
+		sitk_libpath += [sitk_root.find_node('ITK-build/lib/').abspath()]
 		conf.check_cxx(
 			header_name='sitkCommon.h', 
-			lib=['SimpleITKCommon-0.9', 'SimpleITKIO-0.9', 'SimpleITKExplicit-0.9'], 
+			lib=SIMPLEITK_MODULES + ITK_MODULES, 
 			libpath=sitk_libpath, 
 			includes=sitk_includes, 
 			uselib_store='SIMPLEITK_DEBUG', 
 			mandatory=True)
 		
+		v.RPATH += [sitk_root.find_node('ITK-build/lib/').abspath()]
+		v.RPATH += [sitk_root.find_node('SimpleITK-build/lib/').abspath()]
 
 	# sqlite
 
