@@ -8,14 +8,14 @@ def build(bld):
 		source=bld.find_files(['Image/**/*.cpp']), 
 		includes='. .. Image',
 		use='Core',
-		install_path = '${PREFIX}/Plugins',
+		install_path = '${PREFIX}/lib/plugins',
 	)
 	bld.shlib(
 		target='Plugin_Imiomics',
 		source=bld.find_files(['Imiomics/**/*.cpp']), 
 		includes='. .. Imiomics',
 		use='Core SQLITE3',
-		install_path = '${PREFIX}/Plugins',
+		install_path = '${PREFIX}/lib/plugins',
 	)
 	use_cuda = ''
 	if v.USE_CUDA:
@@ -25,5 +25,5 @@ def build(bld):
 		source=bld.find_files(['Registration/**/*.cpp', 'Registration/**/*.cu']), 
 		includes='. .. Registration ../../External/gco-v3.0',
 		use='Core' + use_cuda,
-		install_path = '${PREFIX}/Plugins',
+		install_path = '${PREFIX}/lib/plugins',
 	)

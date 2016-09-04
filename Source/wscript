@@ -47,17 +47,16 @@ def build(bld):
 		includes='. Core',
 		defines='FLOW_CORE_EXPORTS',
 		use=use,
-		install_path = '${PREFIX}',
+		install_path = '${PREFIX}/lib',
 	)
 	bld.program(
 		target='flow_cli',
 		source=bld.find_files(['FlowCLI/**/*.cpp']), 
 		includes='. FlowCLI',
 		use='core',
-		install_path = '${PREFIX}',
+		install_path = '${PREFIX}/bin',
 	)
 
-	
 	if bld.platform == 'win64' and bld.cmd != 'msvs2013':
 		flags = '/SUBSYSTEM:CONSOLE' if bld.configuration == 'debug' else '/SUBSYSTEM:WINDOWS'
 	else:
@@ -79,6 +78,6 @@ def build(bld):
 		includes='. .. FlowCLI',
 		use='core ' + qt_lib,
 		linkflags=flags,
-		install_path = '${PREFIX}',
+		install_path = '${PREFIX}/bin',
 	)	
 	bld.recurse(SUBFOLDERS, mandatory=False)

@@ -17,8 +17,9 @@ from waflib.extras import msvs
 from waflib import Utils, Task
 from waflib.TaskGen import extension, before_method, after_method, feature
 from waflib.Configure import conf
+from waflib.Node import Node
 
-QT5_MODULES = ['Qt5Core', 'Qt5Gui', 'Qt5Widgets']
+QT5_MODULES = ['Qt5Core', 'Qt5Gui', 'Qt5Widgets', 'icui18n', 'icuuc', 'icudata']
 SIMPLEITK_MODULES = [
 	'SimpleITKCommon-0.9',
 	'SimpleITKIO-0.9',
@@ -212,12 +213,20 @@ def copy_qt_bins(self):
 	v = self.env 
 	if v.CONFIGURATION != 'debug' and v.CONFIGURATION != 'release':
 		return
+
+	if v.PLATFORM == 'win64':
+		qt_bin = self.bld.root.make_node(v.QT_HOST_BINS)
+	else:
+		qt_bin = self.bld.root.make_node(v.LIBPATH_QT5[0])
+
+	print qt_bin
 	for m in QT5_MODULES:
 	 	pf = 'd' if v.CONFIGURATION == 'debug' else ''
 		f = v.cxxshlib_PATTERN % (m+pf)
 		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
-		if os.path.isfile(os.path.join(v.QT_HOST_BINS, f)):
-	 		self.create_task('copy_file', self.bld.root.find_node(os.path.join(v.QT_HOST_BINS, f)), output.make_node(f))
+		files = qt_bin.ant_glob([f, f+'.*'])
+		for e in files:
+	 		self.create_task('copy_file', e, output.make_node(e.name))
 
 @feature('copy_simpleitk_bins')
 @after_method('apply_link')
@@ -226,23 +235,32 @@ def copy_sitk_bins(self):
 	if v.CONFIGURATION != 'debug' and v.CONFIGURATION != 'release':
 		return
 
-	sitk_bin = os.path.join(v.SIMPLEITK_ROOT, 'SimpleITK-build', 'bin', v.CONFIGURATION)
+	if v.PLATFORM == 'win64':
+		sitk_bin = self.bld.root.make_node([v.SIMPLEITK_ROOT, 'SimpleITK-build', 'bin', v.CONFIGURATION])
+	else:
+		sitk_bin = self.bld.root.make_node([v.SIMPLEITK_ROOT, 'SimpleITK-build', 'lib'])
 
 	for m in SIMPLEITK_MODULES:
 		f = v.cxxshlib_PATTERN % m
 		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
-		if os.path.isfile(os.path.join(sitk_bin, f)):
-	 		self.create_task('copy_file', self.bld.root.find_node(os.path.join(sitk_bin, f)), output.make_node(f))
+
+		files = sitk_bin.ant_glob([f, f+'.*'])
+		for e in files:
+	 		self.create_task('copy_file', e, output.make_node(e.name))
 
 	 # ITK TODO: For now we assume it is located there
-	sitk_bin = os.path.join(v.SIMPLEITK_ROOT, 'ITK-build', 'bin', v.CONFIGURATION)
+	if v.PLATFORM == 'win64':
+		sitk_bin = self.bld.root.make_node([v.SIMPLEITK_ROOT, 'ITK-build', 'bin', v.CONFIGURATION])
+	else:
+		sitk_bin = self.bld.root.make_node([v.SIMPLEITK_ROOT, 'ITK-build', 'lib'])
 
 	for m in ITK_MODULES:
 		f = v.cxxshlib_PATTERN % m
 		output = self.bld.path.find_node(out).find_node(v.PLATFORM + '_' + v.CONFIGURATION).find_node('Source')
-		if os.path.isfile(os.path.join(sitk_bin, f)):
-	 		self.create_task('copy_file', self.bld.root.find_node(os.path.join(sitk_bin, f)), output.make_node(f))	 
 
+		files = sitk_bin.ant_glob([f, f+'.*'])
+		for e in files:
+	 		self.create_task('copy_file', e, output.make_node(e.name))
 
 
 def options(opt):
@@ -388,6 +406,7 @@ def configure(conf):
 		v.LIBPATH_QT5 += v['LIBPATH_%s' % m.upper()]
 		v.LIBPATH_QT5_DEBUG += v['LIBPATH_%s_DEBUG' % m.upper()]
 
+	v.RPATH += ['.']
 	v.RPATH += v.LIBPATH_QT5
 
 	# Python
