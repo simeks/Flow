@@ -8,9 +8,11 @@
 #include "windows/Platform_win.h"
 #elif FLOW_PLATFORM_MACOSX
 #include "macosx/Platform_macosx.h"
+#elif FLOW_PLATFORM_LINUX
+#include "linux/Platform_linux.h"
 #endif
 
-#include "API.h"
+#include <Core/API.h>
 
 namespace platform
 {

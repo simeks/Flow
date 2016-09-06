@@ -33,6 +33,7 @@ void* ThreadLocalPtr::get() const
 //-------------------------------------------------------------------------------
 SimpleThread::SimpleThread()
     : _thread_handle(NULL),
+    _is_running(false),
     _runnable(NULL)
 {
     _thread_payload.function = NULL;
@@ -67,6 +68,7 @@ void SimpleThread::start_thread(unsigned(__stdcall *func)(void *), void* arg_lis
     _thread_handle = (void*)_beginthreadex(NULL, 0, func, arg_list, CREATE_SUSPENDED, &_thread_id);
     assert(_thread_handle);
     ResumeThread((HANDLE)_thread_handle);
+    _is_running = true;
 }
 
 //-------------------------------------------------------------------------------
@@ -80,6 +82,7 @@ unsigned int SimpleThread::run_runnable(void* param)
         thread->_runnable->run();
 
     thread->_thread_handle = NULL;
+    thread->_is_running = false;
     _endthreadex(0);
     return 0;
 }
@@ -91,6 +94,7 @@ unsigned int SimpleThread::run_function(void* param)
         thread->_thread_payload.function(thread->_thread_payload.params);
 
     thread->_thread_handle = NULL;
+    thread->_is_running = false;
     _endthreadex(0);
     return 0;
 }

@@ -134,31 +134,31 @@ void array_fill(T* dst, const T& src, size_t count)
 template<typename T>
 void array_move(T* dst, const T* src, size_t count)
 {
-    util_internal::array_move(dst, src, count, std::has_trivial_assign<T>());
+    util_internal::array_move(dst, src, count, std::is_trivially_assignable<T, T>());
 }
 
 template<typename T>
 void array_copy(T* dst, const T* src, size_t count)
 {
-    util_internal::array_copy(dst, src, count, std::has_trivial_copy<T>());
+    util_internal::array_copy(dst, src, count, std::is_trivially_copy_constructible<T>());
 }
 
 template<typename T>
 void array_construct(T* arr, size_t count)
 {
-    util_internal::array_construct<T>(arr, count, std::has_trivial_constructor<T>());
+    util_internal::array_construct<T>(arr, count, std::is_trivially_constructible<T>());
 }
 
 template<typename T>
 void array_destruct(T* arr, size_t count)
 {
-    util_internal::array_destruct<T>(arr, count, std::has_trivial_destructor<T>());
+    util_internal::array_destruct<T>(arr, count, std::is_trivially_destructible<T>());
 }
 
 template<typename T>
 void destruct(T* arr)
 {
-    util_internal::destruct<T>(arr, std::has_trivial_destructor<T>());
+    util_internal::destruct<T>(arr, std::is_trivially_destructible<T>());
 }
 
 

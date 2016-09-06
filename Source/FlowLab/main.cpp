@@ -6,8 +6,8 @@
 
 #include <Core/Core.h>
 
-#if FLOW_BUILD_DEBUG
-int main(int /*argc*/, char ** /*argv*/)
+#if defined(FLOW_BUILD_DEBUG) || !defined(FLOW_PLATFORM_WINDOWS)
+int main(int argc, char** argv)
 #else
 int WinMain(HINSTANCE /*hInInstance*/, HINSTANCE /*hPrevInstance*/, char*, int /*nCmdShow*/)
 #endif
@@ -15,7 +15,11 @@ int WinMain(HINSTANCE /*hInInstance*/, HINSTANCE /*hPrevInstance*/, char*, int /
     memory::initialize();
     int res;
     {
+#if defined(FLOW_BUILD_DEBUG) || !defined(FLOW_PLATFORM_WINDOWS)
+        QApplication a(argc, argv);
+#else
         QApplication a(__argc, __argv);
+#endif
 
         QSplashScreen* splash = new QSplashScreen();
         splash->setPixmap(QPixmap(":/res/splash.png"));

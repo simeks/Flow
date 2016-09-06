@@ -82,7 +82,8 @@ void ScriptManager::load_modules()
 }
 void ScriptManager::add_directory(const std::string& path)
 {
-    PyObject* sys_path = PySys_GetObject("path");
+    char pathstr[] = "path";
+    PyObject* sys_path = PySys_GetObject(pathstr);
     PyList_Append(sys_path, PyString_FromString(path.c_str()));
 }
 

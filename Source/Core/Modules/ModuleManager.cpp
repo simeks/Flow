@@ -9,6 +9,8 @@
 #if FLOW_PLATFORM_WINDOWS
 // TODO:
 static const char* module_ext = ".dll";
+#elif FLOW_PLATFORM_LINUX
+static const char* module_ext = ".so";
 #endif
 typedef ModuleInterface* (*CreateModuleFn)();
 

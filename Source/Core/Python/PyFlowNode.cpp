@@ -36,7 +36,9 @@ PyObject* py_flow_node::copy_node(PyObject* src, ScriptNode* node)
 void py_flow_node::run_node(PyObject* obj, PyObject* context)
 {
     Py_INCREF(context);
-    PyObject* ret = PyObject_CallMethod((PyObject*)obj, "run", "O", context);
+    char run_str[] = "run";
+    char o_str[] = "O";
+    PyObject* ret = PyObject_CallMethod((PyObject*)obj, run_str, o_str, context);
     if (!ret)
     {
         PyErr_Print();

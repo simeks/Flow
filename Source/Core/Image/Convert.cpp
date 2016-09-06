@@ -2,6 +2,9 @@
 
 #include "Convert.h"
 
+#include <limits.h>
+#include <float.h>
+
 // TODO: Make global
 template<typename T> INLINE T number_cast(uint8_t v) { return T(v); }
 template<typename T> INLINE T number_cast(uint16_t v) { return T(v); }
@@ -38,9 +41,9 @@ static INLINE void convert_image_tpl(
         dstep[i] = dest_step[i] / sizeof(*dest);
     }
 
-    for (size_t z = 0; z < size.z; ++z)
+    for (int z = 0; z < size.z; ++z)
     {
-        for (size_t y = 0; y < size.y; ++y)
+        for (int y = 0; y < size.y; ++y)
         {
             const TSrc* s = src + (z*sstep[2] + y*sstep[1]);
             TDest* d = dest + (z*dstep[2] + y*dstep[1]);
@@ -71,9 +74,9 @@ static INLINE void convert_image_scale_tpl(
         dstep[i] = dest_step[i] / sizeof(*dest);
     }
 
-    for (size_t z = 0; z < size.z; ++z)
+    for (int z = 0; z < size.z; ++z)
     {
-        for (size_t y = 0; y < size.y; ++y)
+        for (int y = 0; y < size.y; ++y)
         {
             const TSrc* s = src + (z*sstep[2] + y*sstep[1]);
             TDest* d = dest + (z*dstep[2] + y*dstep[1]);

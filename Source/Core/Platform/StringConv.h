@@ -1,7 +1,7 @@
 #ifndef __PLATFORM_STRING_CONV_H__
 #define __PLATFORM_STRING_CONV_H__
 
-#include "API.h"
+#include <Core/API.h>
 
 CORE_API bool convert_string(const char* src, wchar_t* dest, size_t dest_size);
 CORE_API bool convert_string(const wchar_t* src, char* dest, size_t dest_size);

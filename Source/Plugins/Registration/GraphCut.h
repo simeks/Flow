@@ -1,19 +1,29 @@
 #ifndef __REGISTRATION_GRAPH_CUT_H__
 #define __REGISTRATION_GRAPH_CUT_H__
 
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wdeprecated-register"
+#else
 #pragma warning(push)
 #pragma warning(disable: 4512)
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4189)
 #pragma warning(disable: 4701)
 #pragma warning(disable: 4706)
+#endif
 namespace gco
 {
 #include <gco/energy.h>
 #include <gco/graph.cpp>
 #include <gco/maxflow.cpp>
 }
+#if defined(__GNUC__) || defined(__clang__)
+#pragma GCC diagnostic pop
+#else
 #pragma warning(pop)
+#endif
 
 template<typename T>
 class GraphCut

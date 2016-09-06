@@ -3,8 +3,6 @@
 #ifndef __CORE_STLALLOCATOR_H__
 #define __CORE_STLALLOCATOR_H__
 
-
-
 /// @brief Custom allocator for STL
 ///
 ///	It's made so that we can use our memory::DebugAllocator with STL 

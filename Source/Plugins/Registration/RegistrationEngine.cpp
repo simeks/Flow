@@ -18,7 +18,7 @@ static TImage normalize_image(const TImage& image)
 #pragma omp parallel for
     for (int64_t i = 0; i < (int64_t)result.pixel_count(); ++i)
     {
-        result[i] = TImage::TPixelType((result[i] - min) / d);
+        result[i] = typename TImage::TPixelType((result[i] - min) / d);
     }
     return result;
 }
@@ -59,7 +59,7 @@ static ImageUInt8 downsample_mask(const ImageUInt8& mask, double scale)
             {
                 Vec3i v0 = inv_scale * Vec3i(x, y, z);
                 uint8_t maxval = 0;
-                for (int n = 0; n < neighbors.size(); n++)
+                for (int n = 0; n < int(neighbors.size()); n++)
                 {
                     uint8_t tmpval = mask.at(v0 + neighbors[n], image::Border_Constant);
                     if (tmpval > maxval)

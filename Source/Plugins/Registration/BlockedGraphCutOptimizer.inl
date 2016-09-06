@@ -4,8 +4,8 @@
 
 template<typename TImage>
 BlockedGraphCutOptimizer<TImage>::BlockedGraphCutOptimizer() : 
-_energy(0.05),
-_epsilon(0.5)
+_epsilon(0.5),
+_energy(0.05)
 {
     _neighbors[0] = Vec3i(1, 0, 0);
     _neighbors[1] = Vec3i(-1, 0, 0);

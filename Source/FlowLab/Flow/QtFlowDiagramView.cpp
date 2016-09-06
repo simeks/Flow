@@ -19,12 +19,13 @@ Q_DECLARE_METATYPE(FlowNode*);
 
 QtFlowDiagramView::QtFlowDiagramView(QWidget *parent)
     : QGraphicsView(parent),
+    _context_menu(nullptr),
     _current_scene(nullptr),
+    _mode(Mode_Nothing),
     _selected_pin(nullptr),
     _temp_pin(nullptr),
     _temp_connection(nullptr),
-    _highlight_pin(nullptr),
-    _mode(Mode_Nothing)
+    _highlight_pin(nullptr)
 {
     build_node_menu();
 
@@ -309,7 +310,7 @@ void QtFlowDiagramView::build_node_menu()
 
             QMenu* target_menu = _context_menu;
             std::string menu_str = "";
-            for (int i = 0; i < elems.size(); ++i)
+            for (int i = 0; i < int(elems.size()); ++i)
             {
                 if (menu_str != "")
                     menu_str += "/";

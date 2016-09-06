@@ -1,8 +1,9 @@
 #include "Common.h"
 
 #include "Guid.h"
+#include "Timer.h"
 
-#ifdef FLOW_PLATFORM_WINDOWS
+#if defined(FLOW_PLATFORM_WINDOWS)
 #include <Objbase.h>
 
 Guid guid::create_guid()
@@ -14,6 +15,41 @@ Guid guid::create_guid()
 
     return id;
 }
+#elif defined(FLOW_PLATFORM_LINUX)
+#include <sys/time.h>
+
+Guid guid::create_guid()
+{
+    struct timeval t;
+    gettimeofday(&t, NULL);
+
+    struct tm lt;
+    localtime_r(&t.tv_sec, &lt);
+
+    uint32_t a = lt.tm_mday | (lt.tm_hour << 16);
+    uint32_t b = (lt.tm_mon + 1) | (lt.tm_sec << 16);
+    uint32_t c = (t.tv_usec / 1000) | (lt.tm_min << 16);
+    uint32_t d = (lt.tm_year + 1900) ^ timer::tick_count();
+
+    Guid id;
+    id.d1 = a;
+    id.d2 = b >> 16;
+    id.d3 = b & 0xffff;
+
+    int i = 0;
+    for (; i < 4; ++i)
+    {
+        id.d4[i] = (c >> (8*(3-i))) & 0xff;
+    }
+
+    for (; i < 8; ++i)
+    {
+        id.d4[i] = (d >> (8*(7-i))) & 0xff;
+    }
+
+    return id;
+}
+
 #endif
 
 std::string guid::to_string(const Guid& id)

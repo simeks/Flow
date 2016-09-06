@@ -87,7 +87,7 @@ const T& ImageTpl<T>::at(int x, int y, int z) const
 template<typename T>
 const T& ImageTpl<T>::at(const Vec3i& v) const
 {
-    return _data[index(v.x, v.y, v.z)];
+    return at(v.x, v.y, v.z);
 }
 template<typename T>
 T& ImageTpl<T>::at(int x, int y, int z)
@@ -97,7 +97,7 @@ T& ImageTpl<T>::at(int x, int y, int z)
 template<typename T>
 T& ImageTpl<T>::at(const Vec3i& v)
 {
-    return _data[index(v.x, v.y, v.z)];
+    return at(v.x, v.y, v.z);
 }
 
 template<typename T>

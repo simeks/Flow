@@ -3,7 +3,7 @@
 #ifndef __CORE_CONSOLE_H__
 #define __CORE_CONSOLE_H__
 
-#define FATAL_ERROR(fmt, ...) console::fatal_error("%s:%d: "##fmt, __FILE__, __LINE__, __VA_ARGS__)
+#define FATAL_ERROR(fmt, ...) console::fatal_error("%s:%d: " fmt, __FILE__, __LINE__, ##__VA_ARGS__)
 
 namespace console
 {

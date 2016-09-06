@@ -99,7 +99,6 @@ void QtFlowConnection::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
     QPointF end_p = p.pointAtPercent(arrow_end_percent);
     QLineF arrow_line(start_P, end_p);
 
-    arrow_line.unitVector();
     QPointF norm_head(arrow_line.dy(), -arrow_line.dx());
     QPointF arrow_p1 = start_P + norm_head * 0.4;
     QPointF arrow_p2 = start_P - norm_head * 0.4;
@@ -116,7 +115,7 @@ void QtFlowConnection::build_path()
     QPointF start(_start_pin->scenePos() + QPointF(7, 7));
     QPointF end(_end_pin->scenePos() + QPointF(7, 7));
 
-    qreal dx = abs(end.x() - start.x());
+    qreal dx = fabs(end.x() - start.x());
 
     QPointF cp1 = start;
     QPointF cp2 = end;
