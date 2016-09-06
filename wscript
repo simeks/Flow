@@ -219,7 +219,6 @@ def copy_qt_bins(self):
 	else:
 		qt_bin = self.bld.root.make_node(v.LIBPATH_QT5[0])
 
-	print qt_bin
 	for m in QT5_MODULES:
 	 	pf = 'd' if v.CONFIGURATION == 'debug' else ''
 		f = v.cxxshlib_PATTERN % (m+pf)
@@ -358,7 +357,7 @@ def configure_clang_x64_common(conf):
 	v.CXX = 'clang++'
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
-	v.LINKFLAGS += [ '-openmp' ]
+	v.LINKFLAGS += [ '-fopenmp' ]
 
 	v.DEFINES += [
 		'FLOW_PLATFORM_LINUX', 
