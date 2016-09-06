@@ -37,6 +37,16 @@ def greater(In, S):
 def fill_mask(In, Mask, Value):
     return np.ma.array(In, mask=Mask).filled(Value)
 
+@numpy_func('FillMaskColor', 'Image')
+def fill_mask_color(In, Mask, Value = (0, 255, 0, 255)):
+    Mask = Mask.reshape((np.product(Mask.shape), 1))
+    Mask = np.hstack((Mask, Mask, Mask, Mask))
+    if type(Value) == str:
+        Value = Value.split(',')
+        Value = map(int, Value)
+
+    return flow.Image(np.ma.array(In, mask=Mask).filled(Value), 'vec4u8')
+
 # Multiplies either two images of the same size or an image with a scalar.
 #def multiply(A, B):
 #    if type(A) == flow.Image and type(B) == flow.Image:
