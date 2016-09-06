@@ -10,7 +10,6 @@
 
 namespace py_flow_module
 {
-    const int kMaxNumTypes = 1024;
     struct Module
     {
         PyObject* module = nullptr;

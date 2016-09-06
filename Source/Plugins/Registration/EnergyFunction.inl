@@ -12,7 +12,7 @@ INLINE double EnergyFunction<TImage>::unary_term(const Vec3i& p, const Vec3d& de
     double dataterm = 0;
     for (long i = 0; i < _pair_count; i++)
     {
-        dataterm += pow(abs(_fixed_image[i](p) -
+        dataterm += pow(fabs(_fixed_image[i](p) -
             _moving_image[i].linear_at(Vec3d(p) + def)), 2);
     }
 

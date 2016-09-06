@@ -1,9 +1,10 @@
 #ifndef __REGISTRATION_GRAPH_CUT_H__
 #define __REGISTRATION_GRAPH_CUT_H__
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wparentheses"
+#pragma GCC diagnostic ignored "-Wdeprecated-register"
 #else
 #pragma warning(push)
 #pragma warning(disable: 4512)
@@ -18,7 +19,7 @@ namespace gco
 #include <gco/graph.cpp>
 #include <gco/maxflow.cpp>
 }
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic pop
 #else
 #pragma warning(pop)

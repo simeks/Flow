@@ -348,7 +348,7 @@ def configure_gcc_x64_release(conf):
 
 def configure_clang_x64_common(conf):
 	flags = [
-		'-m64', '-Werror', '-Wall', '-std=c++11', '-fopenmp',
+		'-m64', '-Werror', '-Wall', '-std=c++11', '-openmp',
 		'-Wno-inconsistent-missing-override',
 		'-Wno-switch',
 		]
@@ -358,7 +358,7 @@ def configure_clang_x64_common(conf):
 	v.CXX = 'clang++'
 	v.CFLAGS += flags
 	v.CXXFLAGS += flags
-	v.LINKFLAGS += [ '-fopenmp' ]
+	v.LINKFLAGS += [ '-openmp' ]
 
 	v.DEFINES += [
 		'FLOW_PLATFORM_LINUX', 
