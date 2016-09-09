@@ -262,6 +262,7 @@ void QtFlowDiagramView::keyPressEvent(QKeyEvent *e)
             }
         }
         _current_scene->clearSelection();
+        _current_scene->update();
     }
 
     QGraphicsView::keyPressEvent(e);
