@@ -48,8 +48,12 @@ Image image::normalize_image(const Image& src, double min, double max)
         return ::normalize_image<ImageVec3f>(src, min, max);
     case image::PixelType_Vec3d:
         return ::normalize_image<ImageVec3d>(src, min, max);
+    case image::PixelType_Vec4u8:
+        return ImageRGBA32(::normalize_image<ImageColorf>(src, min, max)); // Convert to float -> normalize -> convert back
     case image::PixelType_Vec4f:
         return ::normalize_image<ImageColorf>(src, min, max);
+    case image::PixelType_Vec4d:
+        return ::normalize_image<ImageColord>(src, min, max);
     default:
         assert(false);
     }

@@ -275,6 +275,6 @@ void image::find_min_max(const Image& img, double& min, double& max)
     }
     else
     {
-        FATAL_ERROR("Only float and double supported!");
+        FATAL_ERROR("Only float and double supported! (Type: %s)", image::pixel_type_to_string(img.pixel_type()));
     }
 }

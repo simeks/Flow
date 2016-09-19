@@ -101,7 +101,7 @@ ImageVec3d image::downsample_vectorfield(const ImageVec3d& field, double scale, 
                 v += field.at(p + Vec3i(0, 1, 1), image::Border_Replicate);
                 v += field.at(p + Vec3i(1, 1, 1), image::Border_Replicate);
 
-                result(x, y, z) = 0.0625 * v;
+                result(x, y, z) = scale * v / 8.0;
             }
         }
     }
