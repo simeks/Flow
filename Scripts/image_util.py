@@ -21,6 +21,20 @@ def ImageMatrix1x2(A0, A1):
     data = np.append(da0, da1, 0)
     return flow.Image(data, A0.pixel_type())
 
+@node_func('Matrix3x1', 'Image')
+def ImageMatrix3x1(A0, B0, C0):
+    da0 = A0.to_array()
+    db0 = B0.to_array()
+    dc0 = C0.to_array()
+    
+    data = np.append(da0, db0, 1)
+    data = np.append(data, dc0, 1)
+    return flow.Image(data, A0.pixel_type())
+
+@numpy_func('Add', 'Image/Math')
+def add(A, B):
+    return A + B
+
 @numpy_func('Log10', 'Image/Math')
 def log10(In):
     return np.log10(In)
@@ -33,9 +47,17 @@ def less(In, S):
 def greater(In, S):
     return np.greater(In, S).astype('uint8')
 
+@numpy_func('GreaterEqual', 'Image/Logic')
+def greater_equal(In, S):
+    return np.greater_equal(In, S).astype('uint8')
+
 @numpy_func('FillMask', 'Image')
 def fill_mask(In, Mask, Value):
     return np.ma.array(In, mask=Mask).filled(Value)
+
+@numpy_func('InvertMask', 'Image')
+def invert_mask(In, Mask):
+    return numpy.ma.masked_array(In, numpy.logical_not(Mask))
 
 @numpy_func('FillMaskColor', 'Image')
 def fill_mask_color(In, Mask, Value = (0, 255, 0, 255)):

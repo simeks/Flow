@@ -19,7 +19,7 @@ def grid_img(w, h, step, thickness):
     img = flow.Image(img_data, 'uint8')
     return img
 
-@node_func('DeformationColor', 'Visualization')
+@node_func('Grid2D', 'Visualization')
 def CreateGrid2D(Size, Thickness=4, Step=10):
     return grid_img(Size[0], Size[1], Step, Thickness)
 

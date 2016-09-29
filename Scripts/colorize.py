@@ -24,6 +24,13 @@ def GrayScale(In):
 
 	return flow.Image(out.astype('uint8'), 'uint8')
 
+@node_func('Jet', 'Visualization/ColorMap')
+def Jet(In, Min, Max):
+	data = In.to_array()
+	
+	out = cm.jet((data - Min) / float(Max - Min)) * 255
+	
+	return flow.Image(out.astype('uint8'), 'vec4u8')
 
 @node_func('DivergingScale', 'Visualization/ColorMap')
 def DivergingScale(In):
