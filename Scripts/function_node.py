@@ -44,10 +44,11 @@ class FunctionNode(flow.Node):
         result = self.func(**kwargs)
 
         # If our first argument and the result is an image, copy metadata
-        in_img = kwargs[self.args[0]]
-        if type(result) == flow.Image and type(in_img) == flow.Image:
-            result.set_origin(in_img.origin())
-            result.set_spacing(in_img.spacing())
+        if len(self.args) > 0:
+            in_img = kwargs[self.args[0]]
+            if type(result) == flow.Image and type(in_img) == flow.Image:
+                result.set_origin(in_img.origin())
+                result.set_spacing(in_img.spacing())
 
         ctx.write_pin('Out', result)   
 

@@ -124,13 +124,15 @@ std::string FlowObject::field_as_string(Field* field) const
     return s.str();
 }
 
-FlowObject::FlowObject(const FlowObject& )
+FlowObject::FlowObject(const FlowObject& other)
 {
-    _py_object = nullptr;
+    _py_object = other._py_object;
+    Py_INCREF(_py_object);
 }
-FlowObject& FlowObject::operator=(const FlowObject& )
+FlowObject& FlowObject::operator=(const FlowObject& other)
 {
-    _py_object = nullptr;
+    _py_object = other._py_object;
+    Py_INCREF(_py_object);
+
     return *this;
 }
-

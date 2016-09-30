@@ -7,6 +7,7 @@
 #include "Image/Vec3.h"
 #include "PyFlowContext.h"
 #include "PyFlowObject.h"
+#include "ScriptObject.h"
 
 #include <structmember.h>
 
@@ -126,9 +127,10 @@ PyFlowContext_write_pin(PyFlowContext* self, PyObject* args, PyObject *)
             else
             {
                 FlowObject* fobj = py_flow_object::owner(obj);
-                assert(fobj);
                 if (fobj)
                     self->owner->write_pin(pin_name, fobj);
+                else
+                    self->owner->write_pin(pin_name, new ScriptObject(obj));
             }
         }
 

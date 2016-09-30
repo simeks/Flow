@@ -136,7 +136,8 @@ PyObject* py_flow_object::create_object(PyTypeObject* type, FlowObject* owner)
 }
 FlowObject* py_flow_object::owner(PyObject* object)
 {
-    assert(PyType_IsSubtype((PyTypeObject*)PyObject_Type(object), &py_base_object_type));
+    if (!PyType_IsSubtype((PyTypeObject*)PyObject_Type(object), &py_base_object_type))
+        return nullptr;
     return ((PyFlowObject*)object)->owner;
 }
 void py_flow_object::set_owner(PyObject* object, FlowObject* owner)
