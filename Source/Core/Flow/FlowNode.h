@@ -15,6 +15,8 @@ class CORE_API FlowNode : public FlowObject
     DECLARE_OBJECT(FlowNode, FlowObject);
 
 public:
+    enum { ExecPin_In = 0, ExecPin_Out = 1 };
+
     FlowNode();
     virtual ~FlowNode();
 

@@ -98,6 +98,24 @@ void FlowContext::write_pin(FlowPinPtr pin, FlowObject* data)
         }
     }
 }
+void FlowContext::exec_pin(const std::string& pin_name)
+{
+    if (active_node)
+    {
+        FlowPinPtr pin = active_node->pin(pin_name);
+        exec_pin(pin);
+    }
+}
+void FlowContext::exec_pin(FlowPinPtr pin)
+{
+    if (pin && pin->pin_type() == FlowPin::Out)
+    {
+        for (auto& l : pin->links())
+        {
+            node_queue.push_back(l->owner());
+        }
+    }
+}
 std::string FlowContext::env_var(const std::string& key) const
 {
     auto it = env_vars.find(key);
@@ -111,19 +129,32 @@ void FlowContext::allocate_context(FlowGraphPtr graph)
     {
         for (auto& pin : node.second->pins())
         {
-            if (pin->pin_type() == FlowPin::In)
+            if (pin->pin_type() == FlowPin::Out)
             {
                 pin_data[pin.get()] = nullptr;
             }
         }
     }
 }
+
+void FlowContext::run_node(FlowNode* node)
+{
+    FlowNode* prev = active_node;
+    active_node = node;
+
+    node->run(*this);
+
+    active_node = prev;
+}
+
 void FlowContext::run()
 {
-    for (auto& n : execution_order)
+    while (!node_queue.empty())
     {
-        active_node = n;
-        n->run(*this);
+        FlowNode* node = node_queue.front();
+        run_node(node);
+
+        node_queue.pop_front();
     }
 }
 void FlowContext::clean_up()

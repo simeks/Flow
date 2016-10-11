@@ -57,7 +57,7 @@ def build(bld):
 		install_path = '${PREFIX}/bin',
 	)
 
-	if bld.platform == 'win64' and bld.cmd != 'msvs2013':
+	if bld.cmd != 'msvs2013' and bld.platform == 'win64':
 		flags = '/SUBSYSTEM:CONSOLE' if bld.configuration == 'debug' else '/SUBSYSTEM:WINDOWS'
 	else:
 		flags = ''

@@ -30,6 +30,10 @@ public:
     void write_pin(const std::string& pin_name, FlowObject* data);
     void write_pin(FlowPinPtr pin, FlowObject* data);
 
+    /// Triggers an execution pin
+    void exec_pin(const std::string& pin_name);
+    void exec_pin(FlowPinPtr pin);
+
     /// Returns the environment variable with the specified name. 
     /// Returns empty string ("") if no such variable exists.
     std::string env_var(const std::string& key) const;
@@ -39,11 +43,14 @@ public:
     template<typename ObjectType>
     ObjectType* allocate_object();
 
+    void run_node(FlowNode* node);
+
     void run();
     void clean_up();
 
+    FlowGraph* graph;
+
     std::map<FlowPin*, FlowObject*> pin_data;
-    std::vector<FlowNode*> execution_order;
 
     std::vector<FlowObject*> objects;
 
@@ -51,6 +58,8 @@ public:
 
     FlowNode* active_node;
     PyObject* script_object;
+
+    std::deque<FlowNode*> node_queue;
 };
 
 template<typename ObjectType>

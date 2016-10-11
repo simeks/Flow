@@ -7,6 +7,8 @@ IMPLEMENT_OBJECT(FlowNode, "FlowNode");
 FlowNode::FlowNode() :
     _owner_graph(nullptr)
 {
+    add_pin(">", FlowPin::In); // ExecPin_In
+    add_pin(">", FlowPin::Out); // ExecPin_Out
 }
 FlowNode::~FlowNode()
 {
